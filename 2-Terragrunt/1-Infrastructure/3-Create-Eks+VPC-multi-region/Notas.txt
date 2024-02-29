@@ -1,0 +1,1 @@
+Aqui creamos 2 cluster y 2 VPC en diferentes regiones

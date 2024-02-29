@@ -1,0 +1,1 @@
+En este ejemplo vamos a crear una VPC, un cluster de EKS y un EFS que a su ves crea una llave KMS
