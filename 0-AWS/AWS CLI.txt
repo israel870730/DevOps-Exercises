@@ -1,0 +1,242 @@
+########## Crear instancias ###########
+aws ec2 run-instances \
+--image-id ami-06e46074ae430fba6 \
+--count 1 \
+--instance-type t2.micro \
+--key-name Renovite-poc-linux-jumpbox \
+--block-device-mapping '[ {"DeviceName": "/dev/xvda", "Ebs": { "DeleteOnTermination": true, "VolumeSize": 10, "VolumeType": "gp3" }}]' \
+--security-group-ids sg-02f704014540d1f9b \
+--subnet-id subnet-30c4801e \
+--region=us-east-1
+
+########## Agregar Tag a las instancias ###########
+
+aws ec2 create-tags --resources i-0ba630c2fa56c36dd --tags \
+Key=Name,Value=test-okta-5
+
+########## Eliminar instancias ###########
+aws ec2 terminate-instances --instance-ids i-045769787cdca378d
+
+########## Buscar una instancia por nombre ###########
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=test-okta-2" \
+--region=us-east-1
+
+########## Buscar una instancia por nombre y obtener el id ###########
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=*okta*" \
+--query "Reservations[].Instances[].InstanceId" \
+--region=us-east-1
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=test-okta-5" \
+--query "Reservations[].Instances[].PublicIpAddress" \
+--region=us-east-1
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=test-okta-2" \
+--query "Reservations[].Instances[].PrivateIpAddress" \
+--region=us-east-1
+
+aws ec2 describe-instances \
+--filters "Name=private-ip-address,Values=172.31.92.197" \
+--query "Reservations[].Instances[].{Instance:InstanceId,PublicIpAddress:PublicIpAddress}" \
+--output table \
+--region=us-east-1
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=Test-1" \
+--query "Reservations[].Instances[].{Tags{},Instance:InstanceId,PublicIpAddress:PublicIpAddress,PrivateIpAddress:PrivateIpAddress}" \
+--output table \
+--region=us-east-1
+
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=Test-1" \
+--query 'Reservations[*].Instances[*].[BlockDeviceMappings[*].Ebs.VolumeId]' \
+--output table \
+--region=us-east-1
+
+
+aws ec2 describe-instances --filters "Name=tag:Name,Values=Test-1" --query "Reservations[].Instances[].BlockDeviceMappings[].Ebs.VolumeId" --region=us-east-1
+
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=Test-1" \
+--query "Reservations[].Instances[].{BockId:BlockDeviceMappings[*].Ebs.VolumeId}" \
+--output table \
+--region=us-east-1
+
+
+aws ec2 describe-instances --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`].Value,InstanceId,BlockDeviceMappings[*].Ebs.VolumeId]' --output text
+
+vol-0c36bf0d5e4a19159
+
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=Test-1" \
+--query "Reservations[].Instances[].{Instance:InstanceId,PublicIpAddress:PublicIpAddress,PrivateIpAddress:PrivateIpAddress}" \
+--output table \
+--region=us-east-1
+
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=*okta*" \
+--output table \
+--region=us-east-1
+
+aws ec2 run-instances \
+--image-id ami-025fd1b15f06aba9f \
+--instance-type t2.micro \
+--count 1 \
+--subnet-id subnet-7f5c6506 \
+--key-name ami-poc \
+--security-group-ids sg-05b448029c676a606 \
+--user-data file://okta.sh \
+--region=us-west-2
+
+
+Ejemplo para obtener un token:
+aws sts get-session-token --serial-number arn --token-code 384545
+
+
+PAra tomar un snapshot
+aws ec2 create-snapshot \
+--volume-id vol-1234567890abcdef0 \
+--description "This is the volume snapshot"
+
+
+
+aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=test-okta-1" \
+--query "Reservations[].Instances[].Tags[].{Key:Name,Value:*}" \
+--output table \
+--region=us-east-1
+
+
+aws ec2 describe-instances --query "Reservations[].Instances[].Tags[]" --output table --region=us-east-1
+aws ec2 describe-instances --query "Reservations[].Instances[].{tags:Tags[],Instance:InstanceId,PublicIpAddress:PublicIpAddress,PrivateIpAddress:PrivateIpAddress}" --output table --region=us-east-1
+
+
+  aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running \
+  --query 'Reservations[*].Instances[].[Instance:InstanceId,Tag:Tags[?Key==`Name`]]' \
+  --output table \
+  --region=us-west-2
+
+Litar el ID de las instancias que estan running
+  aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running \
+  --query 'Reservations[*].Instances[].[InstanceId]' \
+  --output table \
+  --region=us-west-2
+
+Litar el nombre de las instancias que estan running
+  aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running \
+  --query 'Reservations[*].Instances[].[Tags[?Key==`Name`]]' \
+  --output table \
+  --region=us-west-2
+
+
+#Listar el ID de las instancias y el Tag Name
+aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running \
+  --query "Reservations[].Instances[].{tags:Tags[],Instance:InstanceId}" \
+  --output table \
+  --region=us-west-2
+
+#Listar el id, tag, ip de las instancias running
+aws ec2 describe-instances \
+  --filters Name=instance-state-name,Values=running \
+  --query "Reservations[].Instances[].{tags:Tags[],Instance:InstanceId,PublicIpAddress:PublicIpAddress,PrivateIpAddress:PrivateIpAddress}" \
+  --output table \
+  --region=us-west-2
+
+
+
+aws ssm describe-parameters \ 
+--filters "Key=Name,Values=token-okta" \ 
+--query "Parameters[]" \ 
+--region eu-west-2
+
+aws ssm describe-parameters  --filters "Key=Name,Values=/Test/IAD/helloWorld"
+
+#Crear un secret en parameer store del SSM
+aws ssm put-parameter \
+--name "/NonProd/okta/token" \
+--value "eyJzIjoiNWQxMmE3MjYtYWMwOS00MDBiLWI5MGUtZmRhODdmYjlmYTM1IiwidSI6Imh0dHBzOi8vYXBwLnNjYWxlZnQuY29tIn0=" \
+--type String \
+--tags "Key=Env,Value=POC" \
+--region eu-west-2
+
+#Obtener el value de un secret
+aws ssm get-parameters --names "token-okta" --query "Parameters[].{Value:Value}" --region eu-west-2
+aws ssm get-parameters --names "token-okta" --query "Parameters[*].{Value:Value}" --region eu-west-2 | jq '.[] .Value'
+Para obtener el parameter sin las comillas
+aws ssm get-parameters --names "/NonProd/okta/token" --query "Parameters[*].{Value:Value}" --region eu-west-2 | jq '.[] .Value' | sed 's/[""]*//g'
+
+
+
+
+aws ssm get-parameters \
+--name "token-okta"
+
+aws ssm get-parameters \
+--names "token-okta" \
+--query "Parameters[*].{Name:Name,Value:Value}" \
+--region eu-west-2 \
+
+Otra forma de eliminar la primera y la ultima entrada de una cadena, con este ejemplo puedo borrar la 1ra y la ultima comilla
+awk -F\| '{ print $2 }' <<<"|string|"
+
+
+aws cloudtrail lookup-events \
+--lookup-attributes AttributeKey=ResourceType,AttributeValue=AWS::EC2::Instance AttributeKey=EventName,AttributeValue=RunInstances AttributeKey=EventTime,AttributeValue=$(date -u +"%Y-%m-%dT%H:%M:%SZ" --date="-24 hours") \
+--region us-east-1 | jq '.Events[].Username'
+
+
+aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=CreateUser --region us-east-1 --output table | jq 'User:.Events[].Username,Time:.Events[].EventTime'
+aws cloudtrail lookup-events --lookup-attributes AttributeKey=EventName,AttributeValue=CreateUser --region us-east-1 | jq '.Events[] | select(.EventTime=="2023-05-05T07:13:21+00:00")'
+jq '.Events[] | select(.EventTime=="2023-05-05T07:13:21+00:00")' cloudtrail.json 
+
+
+#########################################################################################################################################
+Para obtener el token de una cuenta que usa MFA:
+
+CST - vcs-staging
+aws sts get-session-token --serial-number arn:aws:iam::099139769505:mfa/Israel.Garcia@VERIFONE.com --token-code code-from-token
+
+export AWS_ACCESS_KEY_ID=example-access-key-as-in-previous-output
+export AWS_SECRET_ACCESS_KEY=example-secret-access-key-as-in-previous-output
+export AWS_SESSION_TOKEN=example-session-token-as-in-previous-output
+
+Para eliminar las variables exportadas:
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSION_TOKEN
+
+#########################################################################################################################################
+
+Buscar una instancia usando la CLI de AWS - Esto tengo que probarlo
+
+aws ec2 describe-instances \
+--filters "Name=private-ip-address,Values=10.17.1.77" \
+--query "Reservations[].Instances[].InstanceId" \
+--region=us-west-1 \
+--profile=staging_tmp
+
+
+Habiliatar los logs de auditoria en el cluster:
+aws eks --region eu-west-2 update-cluster-config --name reno-qat1-cluster \
+--logging '{"clusterLogging":[{"types":["audit"],"enabled":true}]}'
+
+#########################################################################################################################################
+Para ver las zonas hosteadas en route53
+aws route53 list-hosted-zones --output table
+aws route53 list-hosted-zones
+aws route53 list-hosted-zones --query "HostedZones[].Name" --output text
+aws route53 list-hosted-zones --query "HostedZones[].Name" --output table
+
+
+

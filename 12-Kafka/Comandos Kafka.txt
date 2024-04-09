@@ -1,0 +1,10 @@
+Comandos de kafka:
+
+Kafka dentro de un cluster de EKS-Renovite
+cd /opt/bitnami/kafka/bin
+
+Listar los topic de kafka:
+sh kafka-topics.sh --list --bootstrap-server localhost:9092
+
+Listar los msg dentro de un topic:
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic visa-interchange_response --from-beginning

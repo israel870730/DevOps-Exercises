@@ -1,0 +1,71 @@
+
+###############################################################
+Crear carpeta para guardar la configuracion de jenkins:
+mkdir jenkins_home && chmod 777 jenkins_home
+
+###############################################################
+Crear contenedor con jenkins:
+docker run --name jenkins_server -d -v $PWD/jenkins_home:/var/jenkins_home -p 8080:8080 -p 50000:50000 --restart=on-failure jenkins/jenkins:lts-jdk11
+
+docker run --name jenkins_server -d -v $PWD/jenkins_home:/var/jenkins_home -p 8080:8080 -p 50000:50000 --restart=on-failure jenkins/jenkins:2.426.1-jdk17  - OK
+
+Nota:
+Si hay problemas con el contenedor revisar los log del contenedor
+
+###############################################################
+Entrar al contenedor como root:
+docker exec -u 0 -it jenkins_server bash
+
+###############################################################
+Instalar terraform en el contenedor de jenkins
+1-
+apt update && apt install sudo wget -y
+
+2- Instalar terraform dede la documentacion - https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+
+3- Install the HashiCorp GPG key.
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+4- Verify the key's fingerprint.
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+
+5- Add the official HashiCorp repository to your system. The lsb_release -cs command finds the distribution release codename for your current system,
+such as buster, groovy, or sid.
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+6-
+sudo apt update
+
+7-
+sudo apt-get install terraform
+
+8- Verify the installation
+terraform -help
+
+9- Add any subcommand to terraform -help to learn more about what it does and available options.
+terraform -help plan
+
+Bibliografia:
+https://developer.hashicorp.com/terraform/install
+
+10- Despues que instale terraform hay que habilitarlo por la UI de jenkins:
+https://dev.to/paschalogu/set-up-terraform-in-your-jenkins-docker-container-4mma
+
+###############################################################
+Copiar el codigo para la UI de jenkins
+cat /var/jenkins_home/secrets/initialAdminPassword
+
+###############################################################
+Extras:
+
+Para eliminar los contendores docker que tenemos instalado:
+docker rm -f $(docker ps -aq)
+###############################################################

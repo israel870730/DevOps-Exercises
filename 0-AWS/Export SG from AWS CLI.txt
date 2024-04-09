@@ -1,0 +1,35 @@
+Como sabemos los SG estan fuertemente ligados a la VPC donde originalmente se crean, 
+se puede exportar e importar cuando estan en la misma vpc, pero cuando estan en diferentes vpc este es el procedimiento
+
+Caso de uso:
+queremos ver las reglas del sg-123456 de la vpc-01 en el sg-123457 que esta en la vpc-02
+
+1-
+# Obtén las reglas de seguridad del Security Group original
+
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AppSecurityGroup-new`].IpPermissions' > clon-IpPermissions-Verifoneprod-AppSecurityGroup-new.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AppSecurityGroup-new`].IpPermissionsEgress' > clon-IpPermissionsEgress-Verifoneprod-AppSecurityGroup-new.json
+
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AlertingSecurityGroup`].IpPermissions' > clon-IpPermissions-Verifoneprod-AlertingSecurityGroup.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AlertingSecurityGroup`].IpPermissionsEgress' > clon-IpPermissionsEgress-Verifoneprod-AlertingSecurityGroup.json
+
+2-
+# Crea un nuevo Security Group en la otra VPC y obtén su ID.
+aws ec2 create-security-group --group-name Clon-Verifoneprod-AppSecurityGroup-new --description "Clon from Verifoneprod-AppSecurityGroup-new" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
+aws ec2 create-security-group --group-name Clon-Verifoneprod-AlertingSecurityGroup --description "Clon from Verifoneprod-AlertingSecurityGroup" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
+
+3-
+# Aplica las reglas de seguridad al nuevo Security Group en VPC2
+aws ec2 authorize-security-group-ingress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissions-Verifoneprod-AppSecurityGroup-new.json
+aws ec2 authorize-security-group-egress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissionsEgress-Verifoneprod-AppSecurityGroup-new.json
+
+
+aws ec2 authorize-security-group-ingress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissions-Verifoneprod-AlertingSecurityGroup.json
+aws ec2 authorize-security-group-egress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissionsEgress-Verifoneprod-AlertingSecurityGroup.json
+
+Bibliografia:
+- https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-groups.html
+- https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-egress.html
+- https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html
+- https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-group-rules.html
+- https://repost.aws/es/questions/QUvJSFrP4HRiOxkH5oUSBquw/export-and-import-security-group-rules?sc_ichannel=ha&sc_ilang=en&sc_isite=repost&sc_iplace=hp&sc_icontent=QUvJSFrP4HRiOxkH5oUSBquw&sc_ipos=5
