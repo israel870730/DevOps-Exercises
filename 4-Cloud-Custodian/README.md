@@ -1,2 +1,1 @@
-# Terraform
-Ejercicios de Cloud Custodian
+# Cloud Custodian folder

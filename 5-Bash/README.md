@@ -1,2 +1,1 @@
-# Terraform
-Ejercicios de Bash
+# Bash folder

@@ -1,2 +1,1 @@
-# Terraform
-Ejercicios de K8S
+# K8S folder

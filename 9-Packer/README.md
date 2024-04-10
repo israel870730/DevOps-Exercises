@@ -1,2 +1,1 @@
-# Terraform
-Ejercicios de Packer
+# Packer folder

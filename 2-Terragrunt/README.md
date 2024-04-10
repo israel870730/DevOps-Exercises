@@ -1,5 +1,4 @@
-# terragrunt
-Ejercicios de Terraform usando Terragrunt
+# Terragrunt folder
 
 # Export the profile 
 # First export the profile.

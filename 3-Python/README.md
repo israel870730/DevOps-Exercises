@@ -1,4 +1,3 @@
-# Terraform
-Ejercicios de Python
+# Python folder
 
 AWS Lambda + Python3 is love :)

@@ -1,5 +1,4 @@
-# Terraform
-Ejercicios de Terraform
+# Terraform folder
 
 # Export the profile 
 # First export the profile.
