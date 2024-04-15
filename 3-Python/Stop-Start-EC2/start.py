@@ -1,6 +1,7 @@
 import boto3
 
 def lambda_handler(event, context):
+    # Definimos la region
     aws_region = 'us-east-1'
     
     # Crea una sesión de cliente EC2
