@@ -35,7 +35,7 @@ pipeline {
         stage('Uploading Img'){
             steps {
                 script{
-                    docker.withRegistry('', 'dockerhug_id') {
+                    docker.withRegistry('', 'dockerhub_id') {
                        dockerImage.push("${params.IMAGE_TAG}")
                     }
                 }
