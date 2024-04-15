@@ -1,6 +1,7 @@
+# El "ingress" de este SG se puede eliminar pq podemos acceder a las instancias desde la consola de AWS.
 resource "aws_security_group" "ec2" {
   name        = "ec2-sg"
-  description = "Allow efs outbound traffic"
+  description = "SG-EC2"
   vpc_id = module.vpc.vpc_id
   ingress {
      cidr_blocks = ["0.0.0.0/0"]
@@ -19,9 +20,10 @@ resource "aws_security_group" "ec2" {
   }
 }
 
+# Este SG permite que las instancias EC2 puedan llegar a la RDS
 resource "aws_security_group" "rds" {
    name = "rds-sg"
-   description= "Allow inbound efs traffic from ec2"
+   description= "SG-RDS"
    vpc_id = module.vpc.vpc_id
 
    ingress {

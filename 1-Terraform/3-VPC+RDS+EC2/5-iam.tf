@@ -22,25 +22,23 @@ EOF
   }
 }
 
-resource "aws_iam_role_policy" "test_policy" {
-  name = "test_policy"
-  role = "${aws_iam_role.poc_role.id}"
+# resource "aws_iam_role_policy" "test_policy" {
+#   name = "test_policy"
+#   role = "${aws_iam_role.poc_role.id}"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
+#   policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Effect": "Allow",
+#       "Action": "ec2:*",
+#       "Resource": "*"
+#     }
+#   ]
+# }
+# EOF
+# }
 
 resource "aws_iam_policy_attachment" "attach_amazon_ssm_full_access-poc_role" {
   name       = "attach-amazon-ssm-full-access-poc_role"
@@ -60,19 +58,6 @@ resource "aws_iam_instance_profile" "poc_profile" {
   role = "${aws_iam_role.poc_role.name}"
 }
 
-# Crear un instancia EC2 para probar el rol creado 
-# resource "aws_instance" "role-test" {
-#   ami = "ami-05af0694d2e8e6df3"
-#   instance_type = "t2.micro"
-#   iam_instance_profile = "${aws_iam_instance_profile.poc_profile.name}"
-#   key_name = "demo-efs"
-#   subnet_id = module.vpc.public_subnets[0]
-#   associate_public_ip_address= true
-#   vpc_security_group_ids = [aws_security_group.ec2.id]
-#   tags= {
-#         Name = "poc-role"
-#     }
-# }
 
 #########################################################################
 # Crear un role y adjuntarle dos policys existentes
