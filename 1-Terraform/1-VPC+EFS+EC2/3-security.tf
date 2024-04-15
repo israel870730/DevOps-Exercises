@@ -1,3 +1,4 @@
+# El "ingress" de este SG se puede eliminar pq podemos acceder a las instancias desde la consola de AWS.
 resource "aws_security_group" "ec2" {
   name        = "ec2-sg"
   description = "Allow efs outbound traffic"
@@ -19,6 +20,7 @@ resource "aws_security_group" "ec2" {
   }
 }
 
+# Este SG permite que las instancias EC2 puedan llegar al EFS
 resource "aws_security_group" "efs" {
    name = "efs-sg"
    description= "Allow inbound efs traffic from ec2"

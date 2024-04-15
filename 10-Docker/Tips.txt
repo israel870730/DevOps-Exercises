@@ -1,0 +1,24 @@
+1- Eliminar contenedores no utilizados:
+puedes revisar los contenedores que están en estado de salida (exited) o parados (stopped) utilizando el siguiente comando:
+docker ps -a
+Luego, elimina los contenedores que no necesites utilizando el comando
+docker rm <container_id>
+
+2- Eliminar imágenes no utilizadas:
+Puedes listar todas las imágenes de Docker con el siguiente comando:
+docker images
+Luego, elimina las imágenes que no necesites utilizando el comando
+docker rmi <image_id>
+
+3- Limpiar volúmenes no utilizados:
+Si tienes volúmenes no utilizados, puedes limpiarlos con el siguiente comando:
+docker volume prune
+
+4- Limpiar redes no utilizadas:
+Si tienes redes de Docker que no estás usando, puedes limpiarlas con el siguiente comando:
+docker network prune
+
+5- Limpiar datos no utilizados
+Docker almacena datos temporales y de caché que pueden ocupar espacio. Puedes limpiarlos con el siguiente comando:
+docker system prune -a
+Este comando eliminará todos los contenedores, imágenes, volúmenes y redes no utilizadas.
