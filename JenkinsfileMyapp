@@ -6,6 +6,26 @@ pipeline {
     }
     
     stages {
+         stage('Validation') {
+            // En este stage validamos el tag de la imagen que vamos a crear
+            steps {  
+              script {
+               	def ImgTag = IMAGE_TAG
+
+                if(ImgTag.length() > 6) {
+                    error("Asegúrese de que el TAG de la imagen que definió: $IMAGE_TAG es menor o igual a 6 caracteres!")
+                }           
+
+                def ImgType = /^[a-z0-9-]+$/
+
+                if(!IMAGE_TAG.matches(ImgType)) {
+                    error("Sólo se permiten minúsculas alfanuméricas y guiones.!")   
+                }
+                echo "El nombre de la imagen: $ImgTag es válido!"
+               }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/israel870730/DevOps-Exercises']])
