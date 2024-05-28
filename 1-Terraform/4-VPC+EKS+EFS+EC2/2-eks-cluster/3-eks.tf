@@ -66,23 +66,22 @@ module "eks" {
   tags                            = merge(var.tags, local.common_tags)
 
   # Agregar una regla nueva al SG del los worker node 
-  node_security_group_additional_rules = {
-    ingress_allow_access_from_control_plane = {
-      type                          = "ingress"
-      protocol                      = "-1"
-      from_port                     = 0
-      to_port                       = 0
-      source_cluster_security_group = true
-      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
-    }
-  }
+  # node_security_group_additional_rules = {
+  #   ingress_allow_access_from_control_plane = {
+  #     type                          = "ingress"
+  #     protocol                      = "-1"
+  #     from_port                     = 0
+  #     to_port                       = 0
+  #     source_cluster_security_group = true
+  #     description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
+  #   }
+  # }
 }
 
 # SG of the cluster
-# Allow traffic from EFS port
 resource "aws_security_group_rule" "eks_sg_efs" {
   depends_on = [module.eks]
-  description = "Open EFS port in EKS SG"
+  description = "Allow EFS traffic"
   type              = "ingress"
   from_port         = 2049
   to_port           = 2049
@@ -91,10 +90,9 @@ resource "aws_security_group_rule" "eks_sg_efs" {
   security_group_id = module.eks.cluster_primary_security_group_id
 }
 
-# # Allow traffic from 443 port
 resource "aws_security_group_rule" "eks_sg_https" {
   depends_on = [module.eks]
-  description = "Allow https traffic from all the vpc"
+  description = "Allow https traffic to manage the cluster fromthe Jumbox"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -103,22 +101,21 @@ resource "aws_security_group_rule" "eks_sg_https" {
   security_group_id = module.eks.cluster_primary_security_group_id
 }
 
-# Allow all traffic
-resource "aws_security_group_rule" "eks_allow_all_from_vpc" {
-  depends_on = [module.eks]
-  description = "Allow all traffic from the vpc"
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = [var.vpc_base_cidr]
-  security_group_id = module.eks.cluster_primary_security_group_id
-}
+# resource "aws_security_group_rule" "eks_allow_all_from_vpc" {
+#   depends_on = [module.eks]
+#   description = "Allow all traffic from the vpc"
+#   type              = "ingress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = [var.vpc_base_cidr]
+#   security_group_id = module.eks.cluster_primary_security_group_id
+# }
 
 # SG of the worker node
 resource "aws_security_group_rule" "node_sg_efs" {
   depends_on = [module.eks]
-  description = "Allow traffic from EFS"
+  description = "Allow EFS traffic"
   type              = "ingress"
   from_port         = 2049
   to_port           = 2049
@@ -128,16 +125,16 @@ resource "aws_security_group_rule" "node_sg_efs" {
 }
 
 # SG of the worker node -  Allow all 
-resource "aws_security_group_rule" "node_sg_allow_all" {
-  depends_on = [module.eks]
-  description = "Allow traffic from EFS"
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = [var.vpc_base_cidr]
-  security_group_id = module.eks.node_security_group_id 
-}
+# resource "aws_security_group_rule" "node_sg_allow_all" {
+#   depends_on = [module.eks]
+#   description = "Allow all traffic from the vpc"
+#   type              = "ingress"
+#   from_port         = 0
+#   to_port           = 0
+#   protocol          = "-1"
+#   cidr_blocks       = [var.vpc_base_cidr]
+#   security_group_id = module.eks.node_security_group_id 
+# }
 
 # # Adjuntamos la policy "AmazonSSMFullAccess" para poder acceder a los worker node desde el SSM
 # resource "aws_iam_policy_attachment" "attach_amazon_ssm_full_access" {

@@ -37,7 +37,7 @@ inputs = {
     custom_ami = {
         #ami_type = "AL2_ARM_64"
         # Current default AMI used by managed node groups - pseudo "custom"
-        ami_id = "ami-057c8e758e31d7029"
+        ami_id = "ami-ID"
 
         # This will ensure the bootstrap user data is used to join the node
         # By default, EKS managed node groups will not append bootstrap script;
@@ -56,7 +56,7 @@ inputs = {
         max_size     = 7
         desired_size = 1
 
-        ami_id                     = "ami-057c8e758e31d7029"
+        ami_id                     = "ami-ID"
         enable_bootstrap_user_data = true
 
         pre_bootstrap_user_data = <<-EOT
@@ -79,26 +79,23 @@ inputs = {
 
   aws_auth_roles = [
     {
-      rolearn  = "arn:aws:iam::114712064551:role/aws-reserved/sso.amazonaws.com/eu-west-2/AWSReservedSSO_AWSAdministratorAccess_e1c02011dbc6c63b"
-      username = "AWSReservedSSO_AWSAdministratorAccess_e1c02011dbc6c63b/israel.garcia"
+      rolearn  = "arn:aws:iam::012345678901:role/####"
+      username = "username"
       groups   = ["system:masters"]
     },
   ]
 
   aws_auth_users = [
     {
-      userarn  = "arn:aws:iam::114712064551:user/israel.garcia@verifone.com"
-      username = "israel.garcia"
+      userarn  = "arn:aws:iam::012345678901:user/username"
+      username = "username"
       groups   = ["system:masters"]
     },
   ]
 
   tags = {
-    Service  = "Greenbox"
-    Type     = "Application"
-    App_Name = "Kubernetes"
-    Country  = "UK"
-    Region   = "EMEA"
+    Type     = "App"
+    App      = "Kubernetes"
   }
 }
 

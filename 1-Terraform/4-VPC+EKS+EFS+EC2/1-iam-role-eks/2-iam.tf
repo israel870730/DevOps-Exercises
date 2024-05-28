@@ -7,8 +7,8 @@ resource "aws_iam_role" "terraform_role" {
         "Effect" : "Allow",
         "Principal" : {
           "AWS" : [
-            "arn:aws:iam::012345678901:role/######"
-            #"arn:aws:iam::012345678901:root"
+            "arn:aws:iam::012345678901:root"
+            #"arn:aws:iam::012345678901:role/######"
           ]
         },
         "Action" : "sts:AssumeRole"
