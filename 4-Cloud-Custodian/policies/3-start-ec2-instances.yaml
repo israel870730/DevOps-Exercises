@@ -1,0 +1,41 @@
+policies:
+#Start EC2 instances with the tag "app:Blue"
+  - name: start-ec2-instances-daily-Blue
+    description: |
+      Lambda to Start ec2 instances with the tag "app:Blue"
+    mode:
+      type: periodic
+      schedule: "cron(00 15 ? * 2-6 *)" # UTC Time
+      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      tags:
+        Creator: "@irgarcia"
+    resource: ec2
+    filters:
+      - and:
+        - "tag:optimization": present
+        - type: value
+          key: "tag:app"
+          value: "Blue"
+        - "State.Name": stopped
+    actions:
+      - type: start
+#Start EC2 instances with the tag "app:Green"
+  - name: start-ec2-instances-daily-Green
+    description: |
+      Lambda to Start ec2 instances with the tag "app:Green"
+    mode:
+      type: periodic
+      schedule: "cron(00 15 ? * 2-6 *)" # UTC Time
+      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      tags:
+        Creator: "@irgarcia"
+    resource: ec2
+    filters:
+      - and:
+        - "tag:optimization": present
+        - type: value
+          key: "tag:app"
+          value: "Green"           
+        - "State.Name": stopped
+    actions:
+      - type: start

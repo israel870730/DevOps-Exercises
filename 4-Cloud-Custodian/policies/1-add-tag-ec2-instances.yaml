@@ -1,0 +1,46 @@
+
+policies:
+#Policy add tag for all the instances
+  - name: Add-tag-for-all-instances
+    description: |
+      Add tag to all instances
+    resource: ec2
+    filters:
+      - type: value
+        key: "PrivateIpAddress"
+        op: in
+        value_from:
+          url: file:./policies/ip/ip.txt
+          format: txt
+    actions:
+      - type: tag
+        key: 'optimization'
+        value: 'True'
+#Policy to Add tag for Blue instances group
+  - name: Add-tag-for-Blue-group
+    description: |
+      Add tag to Blue instances group
+    resource: ec2
+    filters:
+      - type: value
+        key: "PrivateIpAddress"
+        op: in
+        value: ["10.XX.XX.XX"]
+    actions:
+      - type: tag
+        key: 'app'
+        value: 'Blue'
+#Policy to Add tag for Green instances group
+  - name: Add-tag-for-Green-group
+    description: |
+      Add tag to Green instances group
+    resource: ec2
+    filters:
+      - type: value
+        key: "PrivateIpAddress"
+        op: in
+        value: ["10.YY.YY.YY"]
+    actions:
+      - type: tag
+        key: 'app'
+        value: 'Green'

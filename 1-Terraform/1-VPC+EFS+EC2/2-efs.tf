@@ -10,7 +10,7 @@ resource "aws_efs_file_system" "eks" {
   # }
 
   tags = {
-    Name = "demo"
+    Name = "demo-efs"
   }
 }
 

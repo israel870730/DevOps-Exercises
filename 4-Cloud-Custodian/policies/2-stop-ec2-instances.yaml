@@ -1,0 +1,41 @@
+policies:
+#Stop EC2 instances with the tag "app:Blue"
+  - name: stop-ec2-instances-daily-Blue
+    description: |
+      Lambda to stop ec2 instances with the tag "app:Blue"
+    mode:
+      type: periodic
+      schedule: "cron(10 14 ? * 2-6 *)"  # UTC Time
+      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      tags:
+        Creator: "@irgarcia"
+    resource: ec2
+    filters:
+      - and:
+        - "tag:optimization": present
+        - type: value
+          key: "tag:app"
+          value: "Blue"
+        - "State.Name": running
+    actions:
+      - type: stop
+#Stop EC2 instances with the tag "app:Green"
+  - name: stop-ec2-instances-daily-Green
+    description: |
+      Lambda to stop ec2 instances with the tag "app:Green"
+    mode:
+      type: periodic
+      schedule: "cron(10 14 ? * 2-6 *)" # UTC Time
+      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      tags:
+        Creator: "@irgarcia"
+    resource: ec2
+    filters:
+      - and:
+        - "tag:optimization": present
+        - type: value
+          key: "tag:app"
+          value: "Green"
+        - "State.Name": running
+    actions:
+      - type: stop

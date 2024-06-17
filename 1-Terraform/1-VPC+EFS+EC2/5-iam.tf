@@ -17,9 +17,7 @@ resource "aws_iam_role" "poc_role" {
 }
 EOF
 
-  tags = {
-      tag-key = "tag-value"
-  }
+  #tags = local.tags
 }
 
 resource "aws_iam_role_policy" "test_policy" {
