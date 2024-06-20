@@ -7,25 +7,25 @@ queremos ver las reglas del sg-123456 de la vpc-01 en el sg-123457 que esta en l
 1-
 # Obtén las reglas de seguridad del Security Group original
 
-aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AppSecurityGroup-new`].IpPermissions' > clon-IpPermissions-Verifoneprod-AppSecurityGroup-new.json
-aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AppSecurityGroup-new`].IpPermissionsEgress' > clon-IpPermissionsEgress-Verifoneprod-AppSecurityGroup-new.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Demo-AppSecurityGroup-new`].IpPermissions' > clon-IpPermissions-Demo-AppSecurityGroup-new.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Demo-AppSecurityGroup-new`].IpPermissionsEgress' > clon-IpPermissionsEgress-Demo-AppSecurityGroup-new.json
 
-aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AlertingSecurityGroup`].IpPermissions' > clon-IpPermissions-Verifoneprod-AlertingSecurityGroup.json
-aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Verifoneprod-AlertingSecurityGroup`].IpPermissionsEgress' > clon-IpPermissionsEgress-Verifoneprod-AlertingSecurityGroup.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Demo-AlertingSecurityGroup`].IpPermissions' > clon-IpPermissions-Demo-AlertingSecurityGroup.json
+aws ec2 describe-security-groups --filters "Name=vpc-id,Values=vpc-0e84fc7c8a40fcb61" --query 'SecurityGroups[?GroupName==`Demo-AlertingSecurityGroup`].IpPermissionsEgress' > clon-IpPermissionsEgress-Demo-AlertingSecurityGroup.json
 
 2-
 # Crea un nuevo Security Group en la otra VPC y obtén su ID.
-aws ec2 create-security-group --group-name Clon-Verifoneprod-AppSecurityGroup-new --description "Clon from Verifoneprod-AppSecurityGroup-new" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
-aws ec2 create-security-group --group-name Clon-Verifoneprod-AlertingSecurityGroup --description "Clon from Verifoneprod-AlertingSecurityGroup" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
+aws ec2 create-security-group --group-name Clon-Demo-AppSecurityGroup-new --description "Clon from Demo-AppSecurityGroup-new" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
+aws ec2 create-security-group --group-name Clon-Demo-AlertingSecurityGroup --description "Clon from Demo-AlertingSecurityGroup" --vpc-id vpc-0da8a3ec5b3cc31a6 --query 'GroupId' --output text
 
 3-
 # Aplica las reglas de seguridad al nuevo Security Group en VPC2
-aws ec2 authorize-security-group-ingress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissions-Verifoneprod-AppSecurityGroup-new.json
-aws ec2 authorize-security-group-egress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissionsEgress-Verifoneprod-AppSecurityGroup-new.json
+aws ec2 authorize-security-group-ingress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissions-Demo-AppSecurityGroup-new.json
+aws ec2 authorize-security-group-egress --group-id sg-031767230c6a2156a --ip-permissions file://clon-IpPermissionsEgress-Demo-AppSecurityGroup-new.json
 
 
-aws ec2 authorize-security-group-ingress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissions-Verifoneprod-AlertingSecurityGroup.json
-aws ec2 authorize-security-group-egress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissionsEgress-Verifoneprod-AlertingSecurityGroup.json
+aws ec2 authorize-security-group-ingress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissions-Demo-AlertingSecurityGroup.json
+aws ec2 authorize-security-group-egress --group-id sg-00bc496e69c83c470 --ip-permissions file://clon-IpPermissionsEgress-Demo-AlertingSecurityGroup.json
 
 Bibliografia:
 - https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-groups.html

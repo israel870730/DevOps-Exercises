@@ -1,0 +1,2 @@
+terraform apply -var-file demo.tfvars 
+En este ejemplo las instancias que se le adjutan al Targuet Group del ALB se agregan una a una
