@@ -43,7 +43,7 @@ resource "aws_ssm_maintenance_window_task" "maintenance_window_task-sns" {
       parameter {
         name   = "TopicArn"
         values = [aws_sns_topic.topic-sns-ssm.arn]
-        #values = ["arn:aws:sns:us-east-1:012345678901:test-ssm"]
+        #values = ["arn:aws:sns:us-east-1:012345678901:test-ssm"] # To change
       }
       parameter {
         name   = "Message"
