@@ -15,7 +15,7 @@ terraform plan
 terraform apply
 terraform destroy
 
-# Para eliminar la cache de terragrunt
+# Para eliminar la cache de terraform
 find ./ -type f -name .terraform.lock.hcl | xargs rm -rf
 find ./ -type d -name .terraform | xargs rm -rf
 

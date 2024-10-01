@@ -11,21 +11,11 @@ module "eks" {
   #cluster_service_ipv4_cidr = var.service_cidr_block
   #cloudwatch_log_group_retention_in_days = var.cloudwatch_log_group_retention_in_days
   
+  # EKS Addons
   # cluster_addons = {
   #   coredns    = {}
   #   kube-proxy = {}
   #   vpc-cni    = {}
-  # }
-  # cluster_addons = {
-  #   coredns = {
-  #     most_recent = true
-  #   }
-  #   kube-proxy = {
-  #     most_recent = true
-  #   }
-  #   vpc-cni = {
-  #     most_recent = true
-  #   }
   # }
 
   # Aqui defino los valores predeterminado que van a tener todos los "eks_managed_node_groups"
@@ -155,5 +145,105 @@ data "aws_ami" "eks_default" {
   filter {
     name   = "name"
     values = ["amazon-eks-node-${var.cluster_version}-v*"]
+  }
+}
+
+module "eks_auth" {
+  source     = "aidanmelen/eks-auth/aws"
+  eks        = module.eks
+  depends_on = [null_resource.merge_kubeconfig]
+
+  map_roles = [
+    {
+      rolearn  = var.terraformrole
+      username = "admin-role"
+      groups   = ["system:masters"]
+    },
+    {
+      rolearn  = "arn:aws:iam::012345678901:role/poc"
+      username = "admin-role"
+      groups   = ["system:masters"]
+    }
+  ]
+
+  map_users = []
+
+  map_accounts = []
+}
+
+module "eks_kubernetes_addons" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
+  depends_on = [null_resource.merge_kubeconfig]
+
+  eks_cluster_id       = module.eks.cluster_name
+  eks_cluster_endpoint = module.eks.cluster_endpoint
+  eks_oidc_provider    = module.eks.oidc_provider
+  eks_cluster_version  = module.eks.cluster_version
+
+   enable_aws_efs_csi_driver = true
+   aws_efs_csi_driver_helm_config = {
+    name        = "aws-efs-csi-driver"
+    namespace   = "kube-system"
+    description = "The AWS EFS CSI driver Helm chart deployment configuration"
+  }
+  
+  enable_aws_for_fluentbit = true
+  aws_for_fluentbit_helm_config = {
+    name        = "aws-for-fluent-bit"
+    namespace   = "kube-system"
+    description = "The AWS Fluent-bit Helm chart deployment configuration"
+  }
+
+  enable_aws_cloudwatch_metrics = true
+  aws_cloudwatch_metrics_helm_config = {
+    name        = "aws-cloudwatch-metrics"
+    namespace   = "kube-system"
+    description = "The AWS CloudWatch Metrics Helm chart deployment configuration"
+  }
+
+  enable_metrics_server = true
+  metrics_server_helm_config = {
+    name        = "metrics-server"
+    namespace   = "kube-system"
+    description = "Metrics Server Helm chart deployment configuration"
+  }
+
+  enable_aws_load_balancer_controller = true
+  aws_load_balancer_controller_helm_config = {
+    name       = "aws-load-balancer-controller"
+    namespace  = "kube-system"
+    escription = "aws-load-balancer-controller Helm chart deployment configuration"
+  }
+
+  # enable_cluster_autoscaler = true
+  # cluster_autoscaler_helm_config = {
+  #   name        = "cluster-autoscaler"
+  #   namespace   = "kube-system"
+  #   description = "Cluster Autoscaler Helm chart deployment configuration"
+  # }
+
+  tags = local.tags
+}
+
+resource "null_resource" "merge_kubeconfig" {
+
+  depends_on = [module.eks]
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command = <<EOT
+      set -e
+      echo 'Updating Kube config file'
+      # aws sts get-caller-identity
+      export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+             $(aws sts assume-role \
+                   --role-arn ${var.terraformrole} \
+                   --role-session-name Jenkins-EKS-Setup \
+                   --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
+                   --output text))
+      aws sts get-caller-identity
+      aws eks wait cluster-active --name '${module.eks.cluster_name}'  --region '${local.region}'
+      aws eks --region ${local.region} update-kubeconfig --name ${module.eks.cluster_name} --alias ${module.eks.cluster_name}
+    EOT
   }
 }

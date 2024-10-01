@@ -22,6 +22,7 @@ export AWS_SESSION_TOKEN=$(echo $credentials | jq -r ".SessionToken")
 3- Aptualizar el kubeconfig
 aws eks --region us-west-1 update-kubeconfig --name demo-eks --alias demo-eks
 
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 #################
 # EFS
 #################
@@ -40,3 +41,6 @@ aws efs describe-file-systems --query "FileSystems[*].FileSystemId" --output tex
 kubectl exec -ti app1 -- tail /data/out1.txt
 kubectl exec -ti app2 -- tail /data/out2.txt
 kubectl exec -ti app2 -- ls -l /data/
+
+
+https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/examples/secrets_encryption/main.tf

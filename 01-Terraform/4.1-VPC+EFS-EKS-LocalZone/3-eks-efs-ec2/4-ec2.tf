@@ -1,16 +1,14 @@
 resource "aws_instance" "jumbox" {
     #count = 1
-    #ami = "ami-05af0694d2e8e6df3"
     ami = data.aws_ami.amazon_linux.id
     instance_type = "t2.micro"
     iam_instance_profile = "${aws_iam_instance_profile.demo_profile.name}"
-    #iam_instance_profile = "demo" # Aqui le paso un rol que ya esta creado 
-    subnet_id = module.vpc.public_subnets[0]
+    subnet_id =  "subnet-0ae02601c1609c16e" # To change
     associate_public_ip_address= true
     vpc_security_group_ids = [aws_security_group.ec2.id]
     #key_name="demo"
     tags= {
-        Name = "Jumbox"
+        Name = "jumbox"
     }
     user_data = <<-EOF
                 #!/bin/bash
