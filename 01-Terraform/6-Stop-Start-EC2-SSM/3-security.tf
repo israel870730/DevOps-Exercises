@@ -1,7 +1,6 @@
-# El "ingress" de este SG se puede eliminar pq podemos acceder a las instancias desde la consola de AWS.
-resource "aws_security_group" "cloud_custodian_sg" {
-  name        = "cloud-custodian-sg"
-  description = "SG-EC2"
+resource "aws_security_group" "demo_ssm" {
+  name        = "demo-ssm"
+  description = "demo_ssm"
   vpc_id = module.vpc.vpc_id
   ingress {
      cidr_blocks = ["0.0.0.0/0"]
@@ -16,6 +15,6 @@ resource "aws_security_group" "cloud_custodian_sg" {
     cidr_blocks     = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "cloud-Custodian-SG"
+    Name = "demo_ssm"
   }
 }
