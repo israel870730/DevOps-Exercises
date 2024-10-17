@@ -1,6 +1,5 @@
 resource "aws_efs_file_system" "demo" {
   creation_token = "demo"
-
   performance_mode = "generalPurpose"
   throughput_mode  = "bursting"
   encrypted        = true

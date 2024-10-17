@@ -10,7 +10,7 @@ variable "region" {
 variable "environment" {
   description = "Environment Name"
   type        = string
-  default     = "Dev"
+  default     = "poc"
 }
 
 variable "terraformrole" {

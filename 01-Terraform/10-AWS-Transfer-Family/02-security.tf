@@ -20,20 +20,17 @@ resource "aws_security_group" "ec2" {
     Name = "SG-EC2"
   }
 }
-
 # Este SG permite que las instancias EC2 puedan llegar al EFS
 resource "aws_security_group" "efs" {
    name = "efs-sg"
    description= "Allow inbound efs traffic from ec2"
    vpc_id = module.vpc.vpc_id
-
    ingress {
      security_groups = [aws_security_group.ec2.id]
      from_port = 2049
      to_port = 2049 
      protocol = "tcp"
-   }     
-        
+   }          
    egress {
      security_groups = [aws_security_group.ec2.id]
      from_port = 0
@@ -44,3 +41,25 @@ resource "aws_security_group" "efs" {
     Name = "efs-sg"
   }
  }
+
+ # Este SG para el endpoint del SFTP
+resource "aws_security_group" "aws_transfer_server" {
+  name        = "sg_aws_transfer_server"
+  description = "sg_aws_transfer_server"
+  vpc_id = module.vpc.vpc_id
+  ingress {
+     from_port = 0
+     to_port = 0
+     protocol = "-1"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "sg_aws_transfer_server"
+  }
+}
