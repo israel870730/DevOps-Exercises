@@ -1,3 +1,9 @@
+variable "instance_count" {
+  description = "Cantidad de instancias EC2"
+  type        = number
+  default     = 3
+}
+
 variable "puerto_servidor" {
   description = "Puerto para las instancias"
   type        = number
@@ -43,12 +49,6 @@ variable "ubuntu_ami" {
     us-east-2 = "ami-02f3416038bdb17fb"
     us-west-1 = "ami-08012c0a9ee8e21c4"
   }
-}
-
-variable "instance_count" {
-  description = "Cantidad de instancias EC2"
-  type        = number
-  default     = 3
 }
 
 #Variable instances name

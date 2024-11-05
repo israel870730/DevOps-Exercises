@@ -50,7 +50,6 @@ resource "aws_iam_policy_attachment" "attach_amazon_ec2_role_for_ssm-poc_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
-
 resource "aws_iam_instance_profile" "poc_profile" {
   name = "poc_profile"
   role = "${aws_iam_role.poc_role.name}"

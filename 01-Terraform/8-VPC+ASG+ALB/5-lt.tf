@@ -2,10 +2,11 @@
 # Launch configuration
 ######
 resource "aws_launch_template" "demo_launch_template" {
-  name   = "demo-launch-template"
-  image_id      = local.ami
+  name          = "demo-launch-template"
+  #image_id      = local.ami
+  image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  key_name                    = aws_key_pair.terraform_demo.id
+  key_name      = aws_key_pair.terraform_demo.id
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   iam_instance_profile {
     name = "${aws_iam_instance_profile.demo_profile.name}"
@@ -73,4 +74,20 @@ resource "aws_launch_template" "demo_launch_template" {
 resource "aws_key_pair" "terraform_demo" {
   key_name   = "terraform_demo"
   public_key = "${file(var.public_key)}"
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-*-20*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  owners = ["amazon"]
 }

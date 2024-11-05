@@ -12,5 +12,6 @@ resource "aws_sns_topic" "topic_sns_ssm" {
 resource "aws_sns_topic_subscription" "user_updates_mail_target" {
   topic_arn = aws_sns_topic.topic_sns_ssm.arn
   protocol  = "email"
-  endpoint  = "tu-email@gmail.com"
+  #endpoint  = "tu-email@gmail.com"
+  endpoint  = "israelg1@verifone.com" #Borrar
 }
