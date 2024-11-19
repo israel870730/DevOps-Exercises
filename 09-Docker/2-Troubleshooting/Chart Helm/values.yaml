@@ -1,0 +1,3 @@
+# values.yaml
+podName: mi-pod
+imageTag: latest

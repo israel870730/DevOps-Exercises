@@ -1,0 +1,9 @@
+# pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.podName }}
+spec:
+  containers:
+    - name: my-container
+      image: nombre_de_la_imagen:{{ .Values.imageTag }}

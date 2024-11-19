@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Tag de la imagen Docker')
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Construir la imagen Docker usando el Dockerfile
+                    docker.build("nombre_de_la_imagen:${params.IMAGE_TAG}")
+                }
+            }
+        }
+        stage('Push to JFrog') {
+            steps {
+                script {
+                    // Autenticarse en JFrog
+                    docker.withRegistry('https://nombre_de_tu_repositorio_jfrog', 'credentials-id-for-jfrog') {
+                        // Empujar la imagen a JFrog con el tag especificado
+                        docker.image("nombre_de_la_imagen:${params.IMAGE_TAG}").push()
+                    }
+                }
+            }
+        }
+    }
+}
+

@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'POD_NAME', defaultValue: 'mi-pod', description: 'Nombre del pod')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Tag de la imagen Docker')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clonar el repositorio de Bitbucket
+                git 'https://bitbucket.org/tu_usuario/tu_repositorio.git'
+            }
+        }
+        stage('Deploy Helm Chart') {
+            steps {
+                // Instalar el chart de Helm con los parámetros especificados
+                sh "helm install mi-aplicacion ./ruta/al/directorio/del/Chart --values values.yaml --set podName=${params.POD_NAME},imageTag=${params.IMAGE_TAG}"
+            }
+        }
+    }
+}
+
