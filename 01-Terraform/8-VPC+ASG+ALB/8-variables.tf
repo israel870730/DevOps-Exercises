@@ -33,18 +33,18 @@ variable "public_key" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
-#Variables en forma de mapas
-variable "ubuntu_ami" {
-  description = "AMI por region"
-  type        = map(string)
-
-  default = {
-    us-east-1 = "ami-052efd3df9dad4825"
-    us-east-2 = "ami-02f3416038bdb17fb"
-    us-west-1 = "ami-08012c0a9ee8e21c4"
-  }
-}
-
 variable "home_ip" {
   description = "IP pública de la casa"
 }
+
+#Variables en forma de mapas
+# variable "ubuntu_ami" {
+#   description = "AMI por region"
+#   type        = map(string)
+
+#   default = {
+#     us-east-1 = "ami-052efd3df9dad4825"
+#     us-east-2 = "ami-02f3416038bdb17fb"
+#     us-west-1 = "ami-08012c0a9ee8e21c4"
+#   }
+# }

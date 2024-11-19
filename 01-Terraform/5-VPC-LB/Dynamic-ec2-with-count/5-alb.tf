@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "demo" {
   }
 }
 
-#Adjuntamos los servidores al targuet group que pertenece al ALB
+#Adjuntamos las instancias EC2 al targuet group que pertenece al ALB
 resource "aws_lb_target_group_attachment" "demo_1" {
   count             = var.instance_count
   target_group_arn  = aws_lb_target_group.demo.arn

@@ -14,7 +14,10 @@ resource "aws_lb_target_group" "demo" {
   port     = 80
   vpc_id   = module.vpc.vpc_id
   protocol = "HTTP"
-  
+
+  # Cuando esta configuración esté aplicada, el Load Balancer enviará solicitudes HTTP al puerto y ruta especificados en cada instancia o target registrado.
+  # Si la instancia responde con un código HTTP 200, será marcada como saludable (healthy).
+  # De lo contrario, será considerada no saludable (unhealthy) y el Load Balancer dejará de enviar tráfico a esa instancia hasta que pase el health check nuevamente. 
   health_check {
     enabled   = true
     matcher  = "200"

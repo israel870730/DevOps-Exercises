@@ -18,14 +18,14 @@ resource "aws_iam_role" "demo_role" {
     EOF
 }
 
-resource "aws_iam_policy_attachment" "attach_amazon_ssm_full_access-demo_role" {
-  name       = "attach-amazon-ssm-full-access-demo_role"
+resource "aws_iam_policy_attachment" "attach_amazon_full_access-demo_role" {
+  name       = "attach-amazon-full-access-demo_role"
   roles      = [aws_iam_role.demo_role.name]
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
 }
 
-resource "aws_iam_policy_attachment" "attach_amazon_ec2_role_for_ssm-demo_role" {
-  name       = "attach-amazon-ec2-role-for-ssm-demo_role"
+resource "aws_iam_policy_attachment" "attach_amazon_ec2_role_for-demo_role" {
+  name       = "attach-amazon-ec2-role-for-demo_role"
   roles      = [aws_iam_role.demo_role.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
