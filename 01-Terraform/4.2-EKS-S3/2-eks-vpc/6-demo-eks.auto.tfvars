@@ -1,31 +1,73 @@
 ###################
 # General Inputs
 ###################
-region          = "us-east-1"
+region          = "us-west-1"
 environment     = "poc"
-terraformrole   = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # Delete
+project_name    = "externaldns"
+terraformrole   = "arn:aws:iam::114712064551:role/TerraformRole-Eks" # To change
 days            = 60
+
+###################
+# VPC Inputs
+###################
+vpc_name               = "demo-externaldns"
+vpc_base_cidr          = "10.1.0.0/16"
+
+availability_zones     = ["us-west-1a", "us-west-1b"]
+private_subnets        = "10.1.11.0/24,10.1.12.0/24"
+public_subnets         = "10.1.21.0/24,10.1.22.0/24"
+isolated_subnets       = "10.1.31.0/24,10.1.32.0/24"
+
+public_subnet_tags = {
+"Name"                       = "Public-Subnet"
+"kubernetes.io/role/elb"     = 1
+"kubernetes.io/cluster/demo-externaldns" = "owned"
+}
+
+private_subnet_tags = {
+"Name"                            = "Private-Subnet"
+"kubernetes.io/role/internal-elb" = 1
+"kubernetes.io/cluster/demo-externaldns"      = "owned"
+}
 
 ###################
 # EKS Inputs
 ###################
-domain_name_in_route53 = "demo.com"
-vpc_id = "vpc-" # To change
-private_subnets = [
-  "subnet-", # To change
-  "subnet-", # To change
-  "subnet-", # To change
-]
-private_subnets_local_zone = "subnet-" # To change
-cluster_name = "demo-lz"
-cluster_version = "1.30"
+cluster_name                    = "demo-externaldns"
+cluster_version                 = "1.30"
+cluster_endpoint_private_access = false # To change in real case
+cluster_endpoint_public_access  = true  # To change in real case
 
-artifactory        = ["172.16.200.0/24"]
-service_cidr_block = "192.168.0.0/22"
-cloudwatch_log_group_retention_in_days = 180
+instance_types = ["t3.medium"]
+desired_size = 2
+min_size     = 1
+max_size     = 5
+
+eks_managed_node_groups = {
+  on_demand = {
+    labels = {
+      role = "on_demand"
+    }
+
+    capacity_type  = "ON_DEMAND"
+  }
+
+  spot = {
+    desired_size = 1
+    min_size     = 1
+    max_size     = 5
+
+    labels = {
+      role = "spot"
+    }
+
+    instance_types = ["t3.micro"]
+    capacity_type  = "SPOT"
+  }
+}
 
 tags = {
-  App_Name = "Kubernetes"
+  App_Name = "Kubernetes_externaldns"
   Country  = "UY"
   Region   = "AMERICA"
 }

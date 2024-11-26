@@ -1,12 +1,11 @@
 locals {
-  ng_name       = "demo-localzone"
+  ng_name       = "demo"
   region        = var.region
   cluster_name  = var.cluster_name
   name          = basename(path.cwd)
-  bucket_name  = "${var.environment}-${var.region}-eks-pod-log"
+  bucket_name  = "${var.environment}-${var.region}-${var.project_name}-eks-log"
   tags          = var.tags
   cluster_version    = var.cluster_version
-  domain_for_route53 = var.domain_name_in_route53
   common_tags = {
     Environment = var.environment
     Terraform   = "true"  

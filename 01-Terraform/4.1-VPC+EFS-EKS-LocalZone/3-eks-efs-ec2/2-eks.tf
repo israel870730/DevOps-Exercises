@@ -12,22 +12,6 @@ module "eks_blueprints" {
   cluster_enabled_log_types              = ["audit", "api", "authenticator", "controllerManager", "scheduler"]
   cluster_endpoint_public_access         = var.cluster_endpoint_public_access
   cluster_endpoint_private_access        = var.cluster_endpoint_private_access
-
-  #EKS Managed Nodes in AZ
-  # managed_node_groups = {
-  #   mng = {
-  #     node_group_name = "mng"
-  #     name            = "mng"
-  #     instance_types  = ["m5.large"]
-  #     min_size        = "1"
-  #     max_size        = "5"
-  #     desired_size    = "1"
-  #     subnet_ids      = var.private_subnets
-  #     tags            = {
-  #       Name = "mng"
-  #     }
-  #   }
-  # }
   
   #EKS LOCAL ZONE NODE GROUP
   self_managed_node_groups = {
@@ -146,7 +130,7 @@ resource "aws_security_group_rule" "allow_node_sg_from_cluster_sg" {
 #Agregar reglas al SG de los nodos
 resource "aws_security_group_rule" "worker_node_sg_update_egress" {
   depends_on = [module.eks_blueprints]
-  description = "Allow artifactory.vficloud.net CIDR"
+  description = "Allow artifactory CIDR"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
@@ -157,7 +141,7 @@ resource "aws_security_group_rule" "worker_node_sg_update_egress" {
 
 resource "aws_security_group_rule" "worker_node_sg_update_ingress" {
   depends_on = [module.eks_blueprints]
-  description = "Allow artifactory.vficloud.net CIDR"
+  description = "Allow artifactory CIDR"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"

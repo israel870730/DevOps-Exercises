@@ -60,7 +60,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 
         content {
           sse_algorithm     = apply_server_side_encryption_by_default.value.sse_algorithm
-          kms_master_key_id = try(apply_server_side_encryption_by_default.value.kms_master_key_id, null)
+          #kms_master_key_id = try(apply_server_side_encryption_by_default.value.kms_master_key_id, null)
         }
       }
     }
@@ -414,11 +414,11 @@ data "aws_iam_policy_document" "deny_incorrect_kms_key_sse" {
       type        = "*"
     }
 
-    condition {
-      test     = "StringNotEquals"
-      variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
-      values   = [try(var.allowed_kms_key_arn, null)]
-    }
+    # condition {
+    #   test     = "StringNotEquals"
+    #   variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
+    #   values   = [try(var.allowed_kms_key_arn, null)]
+    # }
   }
 }
 

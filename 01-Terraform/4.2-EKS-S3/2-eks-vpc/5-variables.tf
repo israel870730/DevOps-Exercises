@@ -3,98 +3,18 @@
 ####################
 variable "region" {
   description = "Region"
-  type        = string
-  default     = ""
+  type = string
+  default = ""
 }
 
 variable "environment" {
   description = "Environment Name"
   type        = string
-  default     = "poc"
+  default     = "Dev"
 }
 
 variable "terraformrole" {
   description = "Terraform Role"
-  type        = string
-  default     = ""
-}
-
-####################
-#  EKS Variables
-####################
-variable "vpc_id" {
-  type = string
-  description = "The IP of the VPC"
-}
-
-variable "private_subnets" {
-  type        = list(string)
-  description = "Private subnet of the AZs"
-}
-
-variable "private_subnets_local_zone" {
-  type        = string
-  description = "Private subnet of the Local zone"
-}
-
-variable "cluster_name" {
-  type        = string
-  description = "Cluste name"
-}
-
-variable "cluster_version" {
-  description = "EKS cluster version to use"
-  type        = string
-  default     = ""
-}
-
-variable "service_cidr_block" {
-  type        = string
-  description = "EKS Service CIDR Block for EKS"
-}
-
-variable "cloudwatch_log_group_retention_in_days" {
-  type        = number
-  description = "Number of days to retain EKS logs for control plane"
-}
-
-variable "domain_name_in_route53" {
-  type = string
-}
-
-##########################
-# EKS Cluster VPC Config
-##########################
-
-variable "cluster_endpoint_public_access" {
-  description = "Indicates whether or not the EKS public API server endpoint is enabled. Default to EKS resource and it is true"
-  type        = bool
-  default     = true
-}
-
-variable "cluster_endpoint_private_access" {
-  description = "Indicates whether or not the EKS private API server endpoint is enabled. Default to EKS resource and it is false"
-  type        = bool
-  default     = false
-}
-
-variable "artifactory" {
-  type        = list
-  description = "Allow artifactory connection with to connect to eks"
-}
-
-variable "tags" {
-  description = "A map of tags that get added to all resources"
-  type        = map(string)
-  default     = {}
-}
-
-####################
-#  S3 Variables
-####################
-
-variable "days" {
-  description = "No. of days for retention of logs in s3 "
   type        = string
 }
 
@@ -199,4 +119,124 @@ variable "vpc_tags" {
   description = "Arbritary tags for VPC"
   type        = map
   default     = {}
+}
+
+####################
+#  EKS Variables
+####################
+variable cluster_name {
+  description = "Name EKS cluster is created with"
+  type        = string
+  default     = ""
+}
+
+variable "cluster_version" {
+  description = "EKS cluster version to use"
+  type        = string
+  default     = ""
+}
+
+variable "cluster_endpoint_private_access" {
+  description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled"
+  type        = bool
+}
+
+variable "cluster_endpoint_public_access" {
+  description = "Indicates whether or not the Amazon EKS public API server endpoint is enabled"
+  type        = bool
+}
+
+variable "vpc_id" {
+  description = "ID for the VPC to deploy EKS cluster"
+  type        = string
+  default     = ""
+}
+
+variable "subnets" {
+  description = "Subnets that run the EKS Worker Nodes"
+  type        = list(string)
+  default     = null
+}
+
+variable "enable_irsa" {
+  description = "Determines whether to create an OpenID Connect Provider for EKS to enable IRSA"
+  type        = bool
+  default     = true
+}
+
+variable "eks_managed_node_groups" {
+  description = "Map of EKS managed node group definitions to create"
+  type        = any
+  default     = {}
+}
+
+variable "manage_aws_auth_configmap" {
+  description = "Determines whether to manage the aws-auth configmap"
+  type        = bool
+  default     = false
+}
+
+variable "create_aws_auth_configmap" {
+  description = "Determines whether to create the aws-auth configmap. NOTE - this is only intended for scenarios where the configmap does not exist (i.e. - when using only self-managed node groups). Most users should use `manage_aws_auth_configmap`"
+  type        = bool
+  default     = false
+}
+
+variable "cluster_enabled_log_types" {
+  description = "A list of the desired control plane logs to enable. For more information, see Amazon EKS Control Plane Logging documentation (https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html)"
+  type        = list(string)
+  default     = ["audit", "api", "authenticator","controllerManager","scheduler"]
+}
+
+variable "tags" {
+  description = "A map of tags that get added to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+# variable "aws_auth_roles" {
+#   description = "List of role maps to add to the aws-auth configmap"
+#   type        = list(any)
+#   default     = []
+# }
+
+# variable "aws_auth_users" {
+#   description = "List of user maps to add to the aws-auth configmap"
+#   type        = list(any)
+#   default     = []
+# }
+
+variable "project_name" {
+  type        = string
+  description = "Name of the project, will be used as prefix in resources names"
+}
+
+variable "instance_types" {
+  type        = list(any)
+  description = "Types of AWS Instance"
+}
+
+# variable "ami_id" {
+#   type        = string
+#   description = "Node AMI ID from which EKS nodes will be derived."
+# }
+
+variable "min_size" {
+  type        = number
+  description = "The minimum number of nodes that the managed node group can scale in to."
+}
+
+variable "max_size" {
+  type        = number
+  description = "The maximum number of nodes that the managed node group can scale out to."
+}
+
+variable "desired_size" {
+  type        = number
+  description = "The current number of nodes that the managed node group should maintain."
+}
+
+variable "days" {
+  description = "No. of days for retention of logs in s3 "
+  type        = string
 }

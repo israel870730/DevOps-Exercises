@@ -1,79 +1,95 @@
-output "eks_cluster_id" {
-  value = module.eks_blueprints.eks_cluster_id
+################################################################################
+# Cluster
+################################################################################
+
+output "cluster_arn" {
+  description = "The Amazon Resource Name (ARN) of the cluster"
+  value       = module.eks.cluster_arn
 }
 
-#-------------------------------
-# EKS Cluster Module Outputs
-#-------------------------------
-output "eks_cluster_arn" {
-  description = "Amazon EKS Cluster Name"
-  value       = module.eks_blueprints.eks_cluster_arn
-}
-
-output "eks_cluster_name" {
-  description = "Amazon EKS Cluster Name"
-  value       = module.eks_blueprints.eks_cluster_id
-}
-
-# output "eks_cluster_certificate_authority_data" {
-#   description = "Base64 encoded certificate data required to communicate with the cluster"
-#   value       = module.eks_blueprints.eks_cluster_certificate_authority_data
-# }
-
-output "eks_cluster_endpoint" {
+output "cluster_endpoint" {
   description = "Endpoint for your Kubernetes API server"
-  value       = module.eks_blueprints.eks_cluster_endpoint
+  value       = module.eks.cluster_endpoint
 }
 
-output "oidc_provider" {
-  description = "The OpenID Connect identity provider (issuer URL without leading `https://`)"
-  value       = module.eks_blueprints.oidc_provider
+output "cluster_id" {
+  description = "The ID of the EKS cluster. Note: currently a value is returned only for local EKS clusters created on Outposts"
+  value       = module.eks.cluster_id
 }
 
-# output "eks_oidc_provider_arn" {
-#   description = "The ARN of the OIDC Provider if `enable_irsa = true`."
-#   value       = module.eks_blueprints.oidc_provider_arn
-# }
-
-output "eks_cluster_version" {
-  description = "The Kubernetes version for the cluster"
-  value       = module.eks_blueprints.eks_cluster_version
+output "cluster_name" {
+  description = "The name of the EKS cluster"
+  value       = module.eks.cluster_name
 }
 
-#-------------------------------
-# Cluster Security Group
-#-------------------------------
-output "cluster_primary_security_group_id" {
-  description = "Cluster security group that was created by Amazon EKS for the cluster. Managed node groups use this security group for control-plane-to-data-plane communication. Referred to as 'Cluster security group' in the EKS console"
-  value       = module.eks_blueprints.cluster_primary_security_group_id
+################################################################################
+# KMS Key
+################################################################################
+
+output "kms_key_arn" {
+  description = "The Amazon Resource Name (ARN) of the key"
+  value       = module.eks.kms_key_arn
 }
 
-output "cluster_security_group_id" {
-  description = "EKS Control Plane Security Group ID"
-  value       = module.eks_blueprints.cluster_security_group_id
+output "kms_key_id" {
+  description = "The globally unique identifier for the key"
+  value       = module.eks.kms_key_id
 }
+
+################################################################################
+# Security Group
+################################################################################
 
 output "cluster_security_group_arn" {
   description = "Amazon Resource Name (ARN) of the cluster security group"
-  value       = module.eks_blueprints.cluster_security_group_arn
+  value       = module.eks.cluster_security_group_arn
 }
 
-#-------------------------------
-# EKS Worker Security Group
-#-------------------------------
-output "worker_node_security_group_arn" {
-  description = "Amazon Resource Name (ARN) of the worker node shared security group"
-  value       = module.eks_blueprints.worker_node_security_group_arn
+output "cluster_security_group_id" {
+  description = "ID of the cluster security group"
+  value       = module.eks.cluster_security_group_id
 }
 
-output "worker_node_security_group_id" {
-  description = "ID of the worker node shared security group"
-  value       = module.eks_blueprints.worker_node_security_group_id
+################################################################################
+# Node Security Group
+################################################################################
+
+output "node_security_group_arn" {
+  description = "Amazon Resource Name (ARN) of the node shared security group"
+  value       = module.eks.node_security_group_arn
 }
 
-output "self_managed_node_group_iam_instance_profile_id" {
-  description = "IAM instance profile id of managed node groups"
-  value       = module.eks_blueprints.self_managed_node_group_iam_instance_profile_id
+output "node_security_group_id" {
+  description = "ID of the node shared security group"
+  value       = module.eks.node_security_group_id
+}
+
+################################################################################
+# IRSA
+################################################################################
+
+output "oidc_provider" {
+  description = "The OpenID Connect identity provider (issuer URL without leading `https://`)"
+  value       = module.eks.oidc_provider
+}
+
+output "oidc_provider_arn" {
+  description = "The ARN of the OIDC Provider if `enable_irsa = true`"
+  value       = module.eks.oidc_provider_arn
+}
+
+################################################################################
+# IAM Role
+################################################################################
+
+output "cluster_iam_role_name" {
+  description = "IAM role name of the EKS cluster"
+  value       = module.eks.cluster_iam_role_name
+}
+
+output "cluster_iam_role_arn" {
+  description = "IAM role ARN of the EKS cluster"
+  value       = module.eks.cluster_iam_role_arn
 }
 
 ################################################################################
@@ -81,15 +97,10 @@ output "self_managed_node_group_iam_instance_profile_id" {
 ################################################################################
 output "configure_kubectl" {
   description = "Configure kubectl using AWS cli"
-  value       = "aws eks --region ${local.region} update-kubeconfig --name ${local.cluster_name} --alias ${local.cluster_name}"
+  value       = "aws eks --region ${local.region} update-kubeconfig --name ${module.eks.cluster_name} --alias ${module.eks.cluster_name}"
 }
 
-output "efs_id" {
-  description = "EFS ID"
-  value = aws_efs_file_system.demo_efs.id
-}
-
-output "ec2_id" {
-  description = "EC2 ID"
-  value = aws_instance.jumbox.id
+output "vpc_id" {
+  description = "VPC ID"
+  value = module.vpc.vpc_id
 }

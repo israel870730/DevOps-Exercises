@@ -235,28 +235,3 @@ variable "desired_size" {
   type        = number
   description = "The current number of nodes that the managed node group should maintain."
 }
-
-# variable "min_size" {
-#   type        = number
-#   description = "The minimum number of nodes that the managed node group can scale in to."
-# }
-
-# variable "max_size" {
-#   type        = number
-#   description = "The maximum number of nodes that the managed node group can scale out to."
-# }
-
-# variable "desired_size" {
-#   type        = number
-#   description = "The current number of nodes that the managed node group should maintain."
-# }
-
-# variable "instance_types" {
-#   type        = list(any)
-#   description = "Types of AWS Instance"
-# }
-
-# variable "ami_id" {
-#   type        = string
-#   description = "Node AMI ID from which EKS nodes will be derived."
-# }

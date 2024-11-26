@@ -31,3 +31,23 @@ https://developer.hashicorp.com/terraform/tutorials/aws/aws-default-tags
 # Acceder a una instancia desde la consola usando el SSM
 # https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
 aws ssm start-session --target inastance-ID --region eu-west-2
+
+- Borrar todos los recursos en el cluster
+    - kubectl delete all --all --all-namespaces --grace-period=0 --force
+
+- Forzar eliminación de recursos problemáticos
+  - kubectl delete pod <pod-name> --grace-period=0 --force -n <namespace>
+
+- Para aplicar esto a todos los pods en un namespace:
+  - kubectl get pods -n <namespace> -o name | xargs kubectl delete --grace-period=0 --force
+
+- Eliminar un Ingress específico
+  - kubectl delete ingress <ingress-name> --grace-period=0 --force -n <namespace>
+
+- Eliminar todos los Ingress en un namespace
+  - kubectl get ingress -n <namespace> -o name | xargs kubectl delete --grace-period=0 --force -n <namespace>
+  
+- Eliminar todos los Ingress en todas las namespaces
+  - kubectl get ingress --all-namespaces -o name | xargs kubectl delete --grace-period=0 --force
+  - kubectl delete --grace-period=0 --force ingress example-app-1-ingress -n poc 
+

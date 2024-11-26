@@ -19,8 +19,8 @@ private_subnets_local_zone = "subnet-" # To change
 cluster_name = "demo-lz"
 cluster_version = "1.30"
 
-artifactory        = ["172.16.200.0/24"]
-service_cidr_block = "192.168.0.0/22"
+artifactory        = ["172.16.0.0/24"]
+service_cidr_block = "192.168.0.0/24"
 cloudwatch_log_group_retention_in_days = 180
 
 tags = {

@@ -27,9 +27,9 @@ resource "aws_iam_role" "terraform_role" {
         "Effect" : "Allow",
         "Principal" : {
           "AWS" : [
-            "arn:aws:iam::012345678901:user/poc",
-					  "arn:aws:iam::012345678901:root", # To change
-            #"arn:aws:iam::012345678901:assumed-role/TerraformRole-Eks/demo" # Descomentar despues que se cree el rol y ejecutar terraform otra vez
+            #"arn:aws:iam::012345678901:user/poc",
+					  "arn:aws:iam::114712064551:root", # To change
+            "arn:aws:iam::114712064551:assumed-role/TerraformRole-Eks/demo" # Descomentar despues que se cree el rol y ejecutar terraform otra vez
           ]
         },
         "Action" : "sts:AssumeRole"

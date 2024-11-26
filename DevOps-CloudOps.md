@@ -38,10 +38,10 @@
    - Conceptos básicos de Linux (comandos, permisos, estructura de directorios).
    - Networking: IP, DNS, Subnets, Firewalls, SSH.
    - Virtualización: qué es y cómo funciona.
-   Cursos:
-   https://www.udemy.com/course/certificacion-lpi-linux-essentials-temario-oficial-examen/?couponCode=BFCPSALE24
-   https://www.udemy.com/course/certificacion-lpic-1-administrador-de-linux-examen-102/?couponCode=BFCPSALE24
-   https://www.udemy.com/course/certificacion-lpic1-administrador-linux-examen-101/?couponCode=BFCPSALE24
+   - Cursos:
+     - https://www.udemy.com/course/certificacion-lpi-linux-essentials-temario-oficial-examen
+     - https://www.udemy.com/course/certificacion-lpic-1-administrador-de-linux-examen-102
+     - https://www.udemy.com/course/certificacion-lpic1-administrador-linux-examen-101
 
 ### **Control de versiones**
    - Git:
@@ -49,9 +49,9 @@
    - Trabajo en ramas (branching).
    - Resolución de conflictos.
    - Buenas prácticas en commits.
-   Cursos:
-   - https://www.udemy.com/course/git-github
-   - https://www.udemy.com/course/git-and-github-bootcamp
+   - Cursos:
+     - https://www.udemy.com/course/git-github
+     - https://www.udemy.com/course/git-and-github-bootcamp
 
 ### **Lenguajes de scripting**
    - Bash scripting: loops, condiciones, automatización de tareas.
@@ -70,36 +70,36 @@
 ### **AWS**
    - Conceptos básicos (EC2, S3, IAM).
    - Crear y administrar instancias simples.
-   Cursos:
-   - https://www.udemy.com/course/aws-certified-cloud-practitioner-new
-   - https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03
-   - https://www.udemy.com/course/ultimate-aws-certified-sysops-administrator-associate
-   - https://www.udemy.com/course/networking-in-aws
-   - https://www.udemy.com/course/aws-vpc-transit-gateway
+   - Cursos:
+     - https://www.udemy.com/course/aws-certified-cloud-practitioner-new
+     - https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03
+     - https://www.udemy.com/course/ultimate-aws-certified-sysops-administrator-associate
+     - https://www.udemy.com/course/networking-in-aws
+     - https://www.udemy.com/course/aws-vpc-transit-gateway
 
 ### **Docker**
    - ¿Qué es un contenedor?
    - Crear y gestionar imágenes (Dockerfile).
    - Gestión de contenedores y redes.
    - Volúmenes y datos persistentes.
-   Cursos:
-   - https://www.udemy.com/course/aprende-docker-desde-cero/
+   - Cursos:
+     - https://www.udemy.com/course/aprende-docker-desde-cero/
 
 ### **Ansible**
    - ¿Qué es Ansible?
    - Playbooks básicos.
    - Conceptos de inventarios.
    - Alternativas: Terraform (mención inicial).
-   Cursos:
-   - https://www.udemy.com/course/ansible-automatizacion-de-principiante-a-experto
-   - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
+   - Cursos:
+     - https://www.udemy.com/course/ansible-automatizacion-de-principiante-a-experto
+     - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
 
 ### **Jenkins (u otra herramienta como GitHub Actions)**
    - Configuración básica.
    - Crear un pipeline simple.
    - Introducción a pipelines YAML.
-   Cursos:
-   - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
+   - Cursos:
+     - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
 
 ### **Helm**
    - Introducir Helm como herramienta de gestión de paquetes para Kubernetes. Incluye:
@@ -107,15 +107,15 @@
       - Creación de charts para empaquetar aplicaciones.
       - Gestión de configuraciones con values.yaml.
       - Integración de Helm con pipelines CI/CD
-   Cursos: 
-   - https://www.udemy.com/course/helm-3-despliega-aplicaciones-en-kubernetes
+   - Cursos: 
+     - https://www.udemy.com/course/helm-3-despliega-aplicaciones-en-kubernetes
 
 ### **Monitoreo y Logs**
    - Conceptos básicos de monitoreo.
    - Prometheus y Grafana: métricas y dashboards.
    - Introducción a ELK Stack (Elasticsearch, Logstash, Kibana).
-   Cursos:
-   - https://www.udemy.com/course-dashboard-redirect/?course_id=3259046
+   - Cursos:
+     - https://www.udemy.com/course-dashboard-redirect/?course_id=3259046
 
 ### **Proyectos**
    - Crear un pipeline CI/CD básico que compile y despliegue una aplicación.
@@ -129,33 +129,33 @@
    - Configuración básica.
    - Creación de recursos en AWS.
    - Variables y módulos.
-   Cursos:
-   -  https://www.udemy.com/course/terraform-infraestructura-como-codigo
+   - Cursos:
+     -  https://www.udemy.com/course/terraform-infraestructura-como-codigo
 
 ### **Terragrunt**
    - Configuración básica.
    - Creación de recursos en AWS.
-   Cursos:
-   - https://www.udemy.com/course/terragrunt-deep-dive
+   - Cursos:
+     - https://www.udemy.com/course/terragrunt-deep-dive
 
 ### **Kubernetes**
    - Conceptos básicos: Pods, Deployments, Services.
    - YAML para Kubernetes.
    - Crear y gestionar clústeres locales (Minikube).
-   Curso:
-   - https://www.udemy.com/course/kubernetes-al-completo
-   - https://www.udemy.com/course/openshift-4-desde-cero
-   - https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests
-   - https://www.udemy.com/course/terraform-on-aws-eks-kubernetes-iac-sre-50-real-world-demos
+   - Curso:
+     - https://www.udemy.com/course/kubernetes-al-completo
+     - https://www.udemy.com/course/openshift-4-desde-cero
+     - https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests
+     - https://www.udemy.com/course/terraform-on-aws-eks-kubernetes-iac-sre-50-real-world-demos
 
 ### **Packer**
    - Incluir Packer para la creación de imágenes de máquina inmutables, un paso esencial para implementar Infraestructura como Código.
-      - Instalación y conceptos básicos.
-      - Creación de plantillas dinámicas.
-      - Integración con AWS para generar AMIs optimizadas.
-      - Incorporación de Packer en flujos CI/CD.
-   Cursos:
-   - https://www.udemy.com/course/hashicorp-packer
+     - Instalación y conceptos básicos.
+     - Creación de plantillas dinámicas.
+     - Integración con AWS para generar AMIs optimizadas.
+     - Incorporación de Packer en flujos CI/CD.
+   - Cursos:
+     - https://www.udemy.com/course/hashicorp-packer
 
 ### **Kafka**
    - Introducir Apache Kafka para trabajar con sistemas distribuidos de mensajería y procesamiento de eventos.
@@ -163,9 +163,9 @@
       - Instalación y configuración básica.
       - Integración con Kubernetes y orquestación de clusters de Kafka.
       - Casos de uso: manejo de logs y flujos de datos.
-      Cursos:
-      - https://www.udemy.com/course/kafka-cluster-setup
-      - https://www.udemy.com/course/apache-kafka
+      - Cursos:
+        - https://www.udemy.com/course/kafka-cluster-setup
+        - https://www.udemy.com/course/apache-kafka
 
 ### **Seguridad en DevOps**
    - Gestión de secretos con HashiCorp Vault.
@@ -193,8 +193,8 @@
    - Implementar un pipeline completo de CI/CD para una aplicación en producción.
    - Configurar un entorno multi-entorno usando Terraform y Kubernetes.
    - Implementar un sistema de monitoreo y alertas con Grafana y Prometheus para un clúster Kubernetes.
-   Cursos:
-   - https://www.udemy.com/course/prometheus-course/?couponCode=BFCPSALE24
+   - Cursos:
+     - https://www.udemy.com/course/prometheus-course
 
 ### **Recursos y Buenas Prácticas**
 - Recursos recomendados:
