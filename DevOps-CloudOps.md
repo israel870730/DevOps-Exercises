@@ -219,8 +219,6 @@
 - https://www.udemy.com/course/complete-python-bootcamp
 - https://www.udemy.com/course/rocking-devops-with-jenkins-kubernetes-ansible
 
-# ---
-
 # Ruta de Aprendizaje para Cloud Ops
   - Esta guía está diseñada para ayudarte a desarrollar habilidades específicas para un rol de Cloud Ops. Aquí se enfoca en la gestión, optimización y monitoreo de infraestructuras en la nube.
 
