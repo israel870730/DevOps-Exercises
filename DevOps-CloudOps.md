@@ -10,13 +10,17 @@
    - **Principales aspectos de DevOps**
       - Cultura de colaboración
          - DevOps promueve la comunicación y cooperación entre equipos, eliminando barreras. Fomenta el entendimiento mutuo de objetivos, responsabilidades y flujos de trabajo.
+
       - Automatización
          - DevOps pone un fuerte énfasis en automatizar tareas repetitivas, como pruebas, integraciones, despliegues y monitoreo. Herramientas como Jenkins, Ansible, Terraform, y Kubernetes son comunes en este ámbito.
+
       - Integración continua y entrega continua (CI/CD)
          - Integración continua (CI): Proceso de integrar código frecuentemente en un repositorio compartido, seguido de pruebas automáticas.
          - Entrega continua (CD): Automatización del despliegue para lanzar software de manera rápida y confiable.
+
       - Infraestructura como código (IaC)
          - Utiliza herramientas como Terraform o CloudFormation para definir y gestionar infraestructuras de TI de manera declarativa. Esto permite consistencia y facilidad de réplica en diferentes entornos.
+
       - Monitoreo y retroalimentación constante
          - DevOps emplea herramientas de monitoreo como Prometheus, Grafana, y ELK para obtener datos en tiempo real sobre el rendimiento del software y la infraestructura. Esto facilita detectar problemas y mejorar iterativamente.
 
@@ -38,6 +42,7 @@
    - Conceptos básicos de Linux (comandos, permisos, estructura de directorios).
    - Networking: IP, DNS, Subnets, Firewalls, SSH.
    - Virtualización: qué es y cómo funciona.
+
    - Cursos:
      - https://www.udemy.com/course/certificacion-lpi-linux-essentials-temario-oficial-examen
      - https://www.udemy.com/course/certificacion-lpic-1-administrador-de-linux-examen-102
@@ -49,6 +54,7 @@
    - Trabajo en ramas (branching).
    - Resolución de conflictos.
    - Buenas prácticas en commits.
+
    - Cursos:
      - https://www.udemy.com/course/git-github
      - https://www.udemy.com/course/git-and-github-bootcamp
@@ -56,6 +62,7 @@
 ### **Lenguajes de scripting**
    - Bash scripting: loops, condiciones, automatización de tareas.
    - Introducción a Python: sintaxis básica, manejo de archivos, módulos útiles.
+
    Cursos:
    - https://www.udemy.com/course/mastering-boto3-with-aws-services
 
@@ -70,6 +77,7 @@
 ### **AWS**
    - Conceptos básicos (EC2, S3, IAM).
    - Crear y administrar instancias simples.
+
    - Cursos:
      - https://www.udemy.com/course/aws-certified-cloud-practitioner-new
      - https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03
@@ -82,6 +90,7 @@
    - Crear y gestionar imágenes (Dockerfile).
    - Gestión de contenedores y redes.
    - Volúmenes y datos persistentes.
+
    - Cursos:
      - https://www.udemy.com/course/aprende-docker-desde-cero/
 
@@ -90,6 +99,7 @@
    - Playbooks básicos.
    - Conceptos de inventarios.
    - Alternativas: Terraform (mención inicial).
+
    - Cursos:
      - https://www.udemy.com/course/ansible-automatizacion-de-principiante-a-experto
      - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
@@ -98,6 +108,7 @@
    - Configuración básica.
    - Crear un pipeline simple.
    - Introducción a pipelines YAML.
+
    - Cursos:
      - https://www.udemy.com/course/la-guia-de-jenkins-de-cero-a-experto
 
@@ -107,6 +118,7 @@
       - Creación de charts para empaquetar aplicaciones.
       - Gestión de configuraciones con values.yaml.
       - Integración de Helm con pipelines CI/CD
+
    - Cursos: 
      - https://www.udemy.com/course/helm-3-despliega-aplicaciones-en-kubernetes
 
@@ -114,6 +126,7 @@
    - Conceptos básicos de monitoreo.
    - Prometheus y Grafana: métricas y dashboards.
    - Introducción a ELK Stack (Elasticsearch, Logstash, Kibana).
+
    - Cursos:
      - https://www.udemy.com/course-dashboard-redirect/?course_id=3259046
 
@@ -129,12 +142,14 @@
    - Configuración básica.
    - Creación de recursos en AWS.
    - Variables y módulos.
+
    - Cursos:
      -  https://www.udemy.com/course/terraform-infraestructura-como-codigo
 
 ### **Terragrunt**
    - Configuración básica.
    - Creación de recursos en AWS.
+
    - Cursos:
      - https://www.udemy.com/course/terragrunt-deep-dive
 
@@ -142,6 +157,7 @@
    - Conceptos básicos: Pods, Deployments, Services.
    - YAML para Kubernetes.
    - Crear y gestionar clústeres locales (Minikube).
+
    - Curso:
      - https://www.udemy.com/course/kubernetes-al-completo
      - https://www.udemy.com/course/openshift-4-desde-cero
@@ -154,6 +170,7 @@
      - Creación de plantillas dinámicas.
      - Integración con AWS para generar AMIs optimizadas.
      - Incorporación de Packer en flujos CI/CD.
+
    - Cursos:
      - https://www.udemy.com/course/hashicorp-packer
 
@@ -163,6 +180,7 @@
       - Instalación y configuración básica.
       - Integración con Kubernetes y orquestación de clusters de Kafka.
       - Casos de uso: manejo de logs y flujos de datos.
+
       - Cursos:
         - https://www.udemy.com/course/kafka-cluster-setup
         - https://www.udemy.com/course/apache-kafka
@@ -193,6 +211,7 @@
    - Implementar un pipeline completo de CI/CD para una aplicación en producción.
    - Configurar un entorno multi-entorno usando Terraform y Kubernetes.
    - Implementar un sistema de monitoreo y alertas con Grafana y Prometheus para un clúster Kubernetes.
+   
    - Cursos:
      - https://www.udemy.com/course/prometheus-course
 
@@ -225,6 +244,7 @@
 ## Nivel 1: Fundamentos
    - **¿Qué es Cloud Ops?**
       - Cloud Ops (abreviatura de Cloud Operations) se refiere a la gestión y optimización de las operaciones de la infraestructura en la nube, incluyendo la administración de servicios, aplicaciones, redes y recursos en plataformas de nube como AWS, Azure, Google Cloud, entre otros. Cloud Ops abarca una serie de prácticas y herramientas diseñadas para garantizar que los sistemas basados en la nube sean confiables, eficientes, seguros y estén optimizados para el rendimiento y el costo.
+      
    - **Principales componentes de Cloud Ops**
       - Automatización de la infraestructura: Cloud Ops a menudo involucra el uso de herramientas de automatización y configuración como Terraform, CloudFormation, Ansible, Chef o Puppet. Esto permite la creación y el manejo de infraestructura de manera repetible y escalable, sin intervención manual.
 
@@ -239,7 +259,7 @@
       - Gestión de incidentes y recuperación ante desastres: Parte de Cloud Ops es la planificación y ejecución de estrategias para gestionar incidentes, fallos de sistemas y recuperación ante desastres. Esto puede incluir la automatización de la recuperación de aplicaciones, el establecimiento de redundancia y la realización de copias de seguridad en la nube.
 
       - DevOps y CI/CD en la nube: Cloud Ops también está estrechamente relacionado con prácticas de DevOps y CI/CD (Integración Continua/Despliegue Continuo), que permiten que los equipos desarrollen, prueben y desplieguen software de manera rápida y eficiente utilizando servicios en la nube.
-      
+
 ### Conceptos básicos
 - **Modelos de servicio:** IaaS, PaaS, SaaS.
 - **Diferencias:** entornos locales vs nube.
