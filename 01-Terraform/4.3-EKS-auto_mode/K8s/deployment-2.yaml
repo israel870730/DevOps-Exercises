@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inflate-2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inflate-2
+  template:
+    metadata:
+      labels:
+        app: inflate-2
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: inflate-2
+          image: public.ecr.aws/eks-distro/kubernetes/pause:3.10
+          # resources:
+          #   requests:
+          #     cpu: 2
