@@ -79,7 +79,7 @@ inputs = {
 
   aws_auth_roles = [
     {
-      rolearn  = "arn:aws:iam::012345678901:role/#####"
+      rolearn  = "arn:aws:iam::Account-ID:role/#####"
       username = "username"
       groups   = ["system:masters"]
     },
@@ -87,7 +87,7 @@ inputs = {
 
   aws_auth_users = [
     {
-      userarn  = "arn:aws:iam::012345678901:user/username"
+      userarn  = "arn:aws:iam::Account-ID:user/username"
       username = "username"
       groups   = ["system:masters"]
     },

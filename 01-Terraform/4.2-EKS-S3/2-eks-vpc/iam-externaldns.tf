@@ -39,7 +39,7 @@ resource "aws_iam_policy" "external_dns" {
 
 # Crear SA desde la consola
 # eksctl create iamserviceaccount -name externaldns-sa --namespace kube-system --cluster demo-externaldns \ 
-# --attach-policy-arn arn:aws:iam::012345678901:policy/demo-externaldns-external-dns-irsa --approve --region us-west-1
+# --attach-policy-arn arn:aws:iam::Account-ID:policy/demo-externaldns-external-dns-irsa --approve --region us-west-1
 
 # IAM Role
 resource "aws_iam_role" "irsa" {
@@ -51,7 +51,7 @@ resource "aws_iam_role" "irsa" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = "arn:aws:iam::012345678901:oidc-provider/oidc.eks.us-west-1.amazonaws.com/id/EE43114F9087525B5A4AA85B0F6C6EE4" # To update
+          Federated = "arn:aws:iam::Account-ID:oidc-provider/oidc.eks.us-west-1.amazonaws.com/id/EE43114F9087525B5A4AA85B0F6C6EE4" # To update
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {

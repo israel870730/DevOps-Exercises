@@ -3,7 +3,7 @@
 ###################
 region          = "us-east-1"
 environment     = "poc"
-terraformrole   = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # To change
+terraformrole   = "arn:aws:iam::Account-ID:role/TerraformRole-Eks" # To change
 
 ###################
 # EKS Inputs

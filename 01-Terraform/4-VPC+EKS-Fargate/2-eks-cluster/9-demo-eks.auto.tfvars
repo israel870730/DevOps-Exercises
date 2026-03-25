@@ -4,7 +4,7 @@
 region          = "us-west-1"
 environment     = "Demo"
 project_name    = "demo-eks"
-terraformrole   = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # To change
+terraformrole   = "arn:aws:iam::Account-ID:role/TerraformRole-Eks" # To change
 
 ###################
 # VPC Inputs

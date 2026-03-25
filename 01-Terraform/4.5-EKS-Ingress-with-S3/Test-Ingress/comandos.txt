@@ -45,10 +45,10 @@ aws elbv2 describe-load-balancer-attributes \
   --output table
 
 aws elbv2 describe-load-balancer-attributes \
-  --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:012345678901:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 \
+  --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:Account-ID:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 \
   --region us-east-1 \
   --query "Attributes[?contains(Key,'s3')]" \
   --output table
   
 # To check the ALB options enabled
-aws elbv2 describe-load-balancer-attributes --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:012345678901:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 --region us-east-1
+aws elbv2 describe-load-balancer-attributes --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:Account-ID:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 --region us-east-1

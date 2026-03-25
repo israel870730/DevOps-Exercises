@@ -25,7 +25,7 @@ module "eks" {
       #Usuarios IAM normales
   # access_entries = {
   #   "eks_admin_1" = {
-  #     principal_arn  = "arn:aws:iam::012345678901:role/TerraformRole-Eks"
+  #     principal_arn  = "arn:aws:iam::Account-ID:role/TerraformRole-Eks"
   #     username = "admin-role"
   #     groups   = ["system:masters"]
   #   }

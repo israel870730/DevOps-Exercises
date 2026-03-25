@@ -21,15 +21,15 @@ find ./ -type d -name .terraform | xargs rm -rf
 find ./ -type f -name terraform.tfstate.backup | xargs rm -rf
 
 # Buscar en que ficheros esta el # de cuenta 
-grep -r '123456789012' ./
-grep -rl '123456789012' ./
+grep -r 'Account-ID' ./
+grep -rl 'Account-ID' ./
 
 - Cambiar el # de cuenta
-grep -rl '123456789012' ./ | xargs sed -i 's/123456789012/012345678901/g'
-grep -rl '123456789012' ./ | xargs sed 's/123456789012/123456789012/g'
+grep -rl 'Account-ID' ./ | xargs sed -i 's/Account-ID/Account-ID/g'
+grep -rl 'Account-ID' ./ | xargs sed 's/Account-ID/Account-ID/g'
 
 - Para cambiar el Rol:
-grep -rl 'arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_qazw123456789012' ./ | xargs sed -i 's|arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_qazw123456789012|arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c|g'
+grep -rl 'arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_qazwAccount-ID' ./ | xargs sed -i 's|arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_qazwAccount-ID|arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c|g'
 
 # Para ver los pod y los nodos al mismo tiempo
 watch -n 1 'kubectl get po -o wide  && kubectl get node'

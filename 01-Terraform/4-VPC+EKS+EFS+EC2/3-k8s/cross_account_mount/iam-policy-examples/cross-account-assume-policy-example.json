@@ -3,6 +3,6 @@
   "Statement": {
     "Effect": "Allow",
     "Action": "sts:AssumeRole",
-    "Resource": "arn:aws:iam::012345678901:role/EFSCrossAccountAccessRole"
+    "Resource": "arn:aws:iam::Account-ID:role/EFSCrossAccountAccessRole"
   }
 }

@@ -146,12 +146,12 @@ module "eks_auth" {
 
   map_roles = [
     {
-      rolearn  = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # To change
+      rolearn  = "arn:aws:iam::Account-ID:role/TerraformRole-Eks" # To change
       username = "admin-role"
       groups   = ["system:masters"]
     },
     {
-      rolearn  = "arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c" # To change
+      rolearn  = "arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c" # To change
       username = "admin-role"
       groups   = ["system:masters"]
     }
@@ -159,12 +159,12 @@ module "eks_auth" {
 
   map_users = [
     {
-      userarn  = "arn:aws:iam::012345678901:user/israel.garcia@demo.com"
+      userarn  = "arn:aws:iam::Account-ID:user/israel.garcia@demo.com"
       username = "israel"
       groups   = ["system:masters"]
     },
     {
-      userarn  = "arn:aws:iam::012345678901:user/poc"
+      userarn  = "arn:aws:iam::Account-ID:user/poc"
       username = "poc"
       groups   = ["system:masters"]
     }

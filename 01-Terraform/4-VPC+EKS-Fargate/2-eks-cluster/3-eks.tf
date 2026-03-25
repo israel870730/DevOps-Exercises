@@ -71,7 +71,7 @@ module "eks_auth" {
       groups   = ["system:masters"]
     },
     {
-      rolearn  = "arn:aws:iam::012345678901:role/poc"
+      rolearn  = "arn:aws:iam::Account-ID:role/poc"
       username = "admin-role"
       groups   = ["system:masters"]
     }

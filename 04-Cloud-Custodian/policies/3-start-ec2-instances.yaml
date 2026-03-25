@@ -6,7 +6,7 @@ policies:
     mode:
       type: periodic
       schedule: "cron(00 15 ? * 2-6 *)" # UTC Time
-      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      role: arn:aws:iam::Account-ID:role/cloud-custodian-role
       tags:
         Creator: "@irgarcia"
     resource: ec2
@@ -26,7 +26,7 @@ policies:
     mode:
       type: periodic
       schedule: "cron(00 15 ? * 2-6 *)" # UTC Time
-      role: arn:aws:iam::012345678901:role/cloud-custodian-role
+      role: arn:aws:iam::Account-ID:role/cloud-custodian-role
       tags:
         Creator: "@irgarcia"
     resource: ec2

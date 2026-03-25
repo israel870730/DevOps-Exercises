@@ -112,7 +112,7 @@ data "aws_ami" "eks_default_al2023" {
 #Terraform (AWS provider ≥ v5.44 / v6.x)
 resource "aws_eks_access_entry" "devops_role" {
   cluster_name  = module.eks.cluster_name
-  principal_arn = "arn:aws:iam::012345678901:role/aws-reserved/sso.amazonaws.com/eu-west-2/AWSReservedSSO_AWSAdministratorAccess_e1c02011dbc6c63b"
+  principal_arn = "arn:aws:iam::Account-ID:role/aws-reserved/sso.amazonaws.com/eu-west-2/AWSReservedSSO_AWSAdministratorAccess_e1c02011dbc6c63b"
   type          = "STANDARD" # permite asociar policies
 }
 

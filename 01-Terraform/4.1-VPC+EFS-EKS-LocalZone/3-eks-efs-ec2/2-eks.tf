@@ -157,7 +157,7 @@ module "eks_auth" {
 
   map_roles = [
     {
-      rolearn  = "arn:aws:iam::012345678901:role/TerraformRole-Eks"
+      rolearn  = "arn:aws:iam::Account-ID:role/TerraformRole-Eks"
       username = "admin-role"
       groups   = ["system:masters"]
     }
@@ -165,12 +165,12 @@ module "eks_auth" {
 
   map_users = [
     {
-      userarn = "arn:aws:iam::012345678901:root"
+      userarn = "arn:aws:iam::Account-ID:root"
       username = "root"
       groups   = ["system:masters"]
     },
     {
-      userarn = "arn:aws:iam::012345678901:user/poc"
+      userarn = "arn:aws:iam::Account-ID:user/poc"
       username = "poc"
       groups   = ["system:masters"]
     }

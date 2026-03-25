@@ -4,7 +4,7 @@
 region        = "us-west-1"
 environment   = "poc"
 project_name  = "externaldns"
-terraformrole = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # To change
+terraformrole = "arn:aws:iam::Account-ID:role/TerraformRole-Eks" # To change
 days          = 60
 
 ###################

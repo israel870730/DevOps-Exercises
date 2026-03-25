@@ -4,9 +4,9 @@
 region          = "us-east-1"
 environment     = "poc"
 project_name    = "demo"
-terraformrole   = "arn:aws:iam::012345678901:role/TerraformRole-Eks"
+terraformrole   = "arn:aws:iam::Account-ID:role/TerraformRole-Eks"
 days            = 60
-admin_sso_role_arn = "arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c"
+admin_sso_role_arn = "arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c"
 
 ###################
 # VPC Inputs

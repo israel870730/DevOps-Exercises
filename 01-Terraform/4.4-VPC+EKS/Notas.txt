@@ -1,5 +1,5 @@
 1-
-credentials=$(aws sts assume-role --role-arn arn:aws:iam::012345678901:role/TerraformRole-Eks --role-session-name "demo" | jq ".Credentials")
+credentials=$(aws sts assume-role --role-arn arn:aws:iam::Account-ID:role/TerraformRole-Eks --role-session-name "demo" | jq ".Credentials")
 export AWS_ACCESS_KEY_ID=$(echo $credentials | jq -r ".AccessKeyId")
 export AWS_SECRET_ACCESS_KEY=$(echo $credentials | jq -r ".SecretAccessKey")
 export AWS_SESSION_TOKEN=$(echo $credentials | jq -r ".SessionToken")
@@ -9,7 +9,7 @@ export AWS_ACCESS_KEY_ID=$(echo $credentials | jq -r ".AccessKeyId")
 export AWS_SECRET_ACCESS_KEY=$(echo $credentials | jq -r ".SecretAccessKey")
 export AWS_SESSION_TOKEN=$(echo $credentials | jq -r ".SessionToken")
 
-- rolearn: arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c
+- rolearn: arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c
       groups:
       - system:masters
       username: admin-role

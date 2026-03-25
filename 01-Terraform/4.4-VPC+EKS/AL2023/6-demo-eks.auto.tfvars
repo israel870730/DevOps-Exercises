@@ -6,7 +6,7 @@ region          = "eu-west-3"
 
 environment     = "poc"
 project_name    = "demo-al2023"
-terraformrole   = "arn:aws:iam::012345678901:role/TerraformRole-Eks" # To change
+terraformrole   = "arn:aws:iam::Account-ID:role/TerraformRole-Eks" # To change
 days            = 60
 
 ###################

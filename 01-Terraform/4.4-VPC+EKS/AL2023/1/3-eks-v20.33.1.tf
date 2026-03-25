@@ -26,7 +26,7 @@
 #         #Usuarios IAM normales
 #     # access_entries = {
 #     #   "eks_admin_1" = {
-#     #     principal_arn  = "arn:aws:iam::012345678901:role/TerraformRole-Eks"
+#     #     principal_arn  = "arn:aws:iam::Account-ID:role/TerraformRole-Eks"
 #     #     username = "admin-role"
 #     #     groups   = ["system:masters"]
 #     #   }
@@ -192,17 +192,17 @@
 
 #     #   aws_auth_roles = [
 #     #     # {
-#     #     #   rolearn  = "arn:aws:iam::012345678901:role/TerraformRole-Eks"
+#     #     #   rolearn  = "arn:aws:iam::Account-ID:role/TerraformRole-Eks"
 #     #     #   username = "admin-role"
 #     #     #   groups   = ["system:masters"]
 #     #     # },
 #     #     {
-#     #       rolearn  = "arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c"
+#     #       rolearn  = "arn:aws:iam::Account-ID:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c"
 #     #       username = "admin-role"
 #     #       groups   = ["system:masters"]
 #     #     },
 #     #     {
-#     #       rolearn  = "arn:aws:iam::012345678901:role/on_demand-al2023-eks-node-group-20250612155659967400000002"
+#     #       rolearn  = "arn:aws:iam::Account-ID:role/on_demand-al2023-eks-node-group-20250612155659967400000002"
 #     #       username = "system:node:{{EC2PrivateDNSName}}"
 #     #       groups   = ["system:bootstrappers", "system:nodes"]
 #     #     }
