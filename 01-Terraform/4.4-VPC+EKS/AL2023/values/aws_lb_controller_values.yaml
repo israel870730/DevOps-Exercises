@@ -1,0 +1,50 @@
+image:
+    # repository: ${repository}
+    # tag: ${tag}
+    # pullPolicy: Always
+clusterName: ${cluster_name}
+# imagePullSecrets: 
+#   - name: ${imagePullSecrets}
+# Enable Shield addon for ALB (default true)
+enableShield: false
+#
+# # Enable WAF addon for ALB (default true)
+enableWaf: false
+#
+# # Enable WAF V2 addon for ALB (default true)
+enableWafv2: false
+defaultTags:
+  ${tags_values}
+serviceAccount:
+  # imagePullSecrets: 
+  #   - name: ${imagePullSecrets}
+# Habilitando S3 para salvar los logs de todos los ALB por default
+ingressClassParams:
+  create: true
+  name: alb
+  spec:
+    loadBalancerAttributes:
+      # access_logs
+      - key: access_logs.s3.enabled
+        value: "true"
+      - key: access_logs.s3.bucket
+        value: "poc-eu-west-2-demo-eks-pod-log-alb1" # To change
+      - key: access_logs.s3.prefix
+        value: "poc-alb-accesslogs" # To change
+      # connection_logs
+      - key: connection_logs.s3.enabled
+        value: "true"
+      - key: connection_logs.s3.bucket
+        value: "poc-eu-west-2-demo-eks-pod-log-alb1" # To change
+      - key: connection_logs.s3.prefix
+        value: "poc-alb-connectionlogs" # To change
+      # health_check
+      # - key: health_check_logs.s3.enabled
+      #   value: "true"
+      # - key: health_check_logs.s3.bucket
+      #   value: "poc-eu-west-2-demo-eks-pod-log-alb1"
+      # - key": health_check_logs.s3.prefix
+      #   value: "poc-alb-healthchecklogs"
+
+# To check the ALB options enabled
+# aws elbv2 describe-load-balancer-attributes --load-balancer-arn arn:aws:elasticloadbalancing:eu-west-2:370389955891:loadbalancer/app/k8s-poc-bee7665baa/990a606602244498 --region eu-west-2

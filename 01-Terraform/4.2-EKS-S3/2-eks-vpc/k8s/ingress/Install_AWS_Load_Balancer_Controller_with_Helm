@@ -1,0 +1,59 @@
+# helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+#   -n kube-system \
+#   --set clusterName=my-cluster \
+#   --set serviceAccount.create=false \
+#   --set serviceAccount.name=aws-load-balancer-controller \
+#   --version 1.14.0
+
+#helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --version 1.14.0 values.yaml
+
+
+##################################
+### Values.yaml
+##################################
+clusterName: clusterName
+
+# Enable Shield addon for ALB (default true)
+enableShield: false
+#
+# # Enable WAF addon for ALB (default true)
+enableWaf: false
+#
+# # Enable WAF V2 addon for ALB (default true)
+enableWafv2: false
+
+defaultTags:
+  default_tag1: value1
+  default_tag2: value2
+
+serviceAccount:
+  create: false
+  name: aws-load-balancer-controller
+
+# Habilitando S3 para salvar los logs de todos los ALB por default
+ingressClassParams:
+  create: true
+  name: alb
+  spec:
+    loadBalancerAttributes:
+      # access_logs
+      - key: access_logs.s3.enabled
+        value: "true"
+      - key: access_logs.s3.bucket
+        value: "poc-eu-west-2-demo-eks-pod-log-alb1"
+      - key: access_logs.s3.prefix
+        value: "poc-alb-accesslogs"
+      # connection_logs
+      - key: connection_logs.s3.enabled
+        value: "true"
+      - key: connection_logs.s3.bucket
+        value: "poc-eu-west-2-demo-eks-pod-log-alb1"
+      - key: connection_logs.s3.prefix
+        value: "poc-alb-connectionlogs"
+      # health_check
+      # - key: health_check_logs.s3.enabled
+      #   value: "true"
+      # - key: health_check_logs.s3.bucket
+      #   value: "poc-eu-west-2-demo-eks-pod-log-alb1"
+      # - key": health_check_logs.s3.prefix
+      #   value: "poc-alb-healthchecklogs"

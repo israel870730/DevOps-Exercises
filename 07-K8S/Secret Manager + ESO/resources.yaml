@@ -1,0 +1,140 @@
+###############################################
+# VARIABLES - Cambia solo estos valores
+###############################################
+# AWS_ACCOUNT_ID:    123456789012
+# AWS_REGION:        eu-west-2
+# OIDC_ID:           ABCDEF1234567890ABCDEF1234567890
+# CLUSTER_NAME:      my-eks-cluster
+# SA_NAME:           eso-poc-sa
+# SA_NAMESPACE:      external-secrets
+# TARGET_NAMESPACE:  poc
+# IAM_ROLE_NAME:     eso-poc-role
+# SECRET_NAME_AWS:   /dev/poc/aws-secret-manager
+# SECRET_NAME_K8S:   poc-secret
+###############################################
+
+# =============================================
+# PASO 1: Crear el IAM Role con trust policy
+# =============================================
+# Ejecutar en tu terminal con AWS CLI
+
+# -- 1a. Crear el trust policy JSON --
+cat <<'EOF' > trust-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::123456789012:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/ABCDEF1234567890ABCDEF1234567890"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "oidc.eks.eu-west-2.amazonaws.com/id/ABCDEF1234567890ABCDEF1234567890:sub": "system:serviceaccount:external-secrets:eso-poc-sa",
+          "oidc.eks.eu-west-2.amazonaws.com/id/ABCDEF1234567890ABCDEF1234567890:aud": "sts.amazonaws.com"
+        }
+      }
+    }
+  ]
+}
+EOF
+
+# -- 1b. Crear el IAM Role --
+aws iam create-role \
+  --role-name eso-poc-role \
+  --assume-role-policy-document file://trust-policy.json
+
+# -- 1c. Adjuntar la política inline de acceso al secreto --
+cat <<'EOF' > secrets-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+      ],
+      "Resource": "arn:aws:secretsmanager:eu-west-2:123456789012:secret:/dev/poc/aws-secret-manager-*"
+    }
+  ]
+}
+EOF
+
+aws iam put-role-policy \
+  --role-name eso-poc-role \
+  --policy-name eso-poc-secrets-access \
+  --policy-document file://secrets-policy.json
+
+# Crear el secreto en secret manager 
+########################################
+# Secrets Manager
+########################################
+resource "aws_secretsmanager_secret" "poc_sm" {
+  name = "/dev/poc/aws-secret-manager"
+  description = "/dev/poc/aws-secret-manager"
+  tags = var.tags
+}
+
+resource "aws_secretsmanager_secret_version" "poc_value" {
+  secret_id     = aws_secretsmanager_secret.poc_sm.id
+  secret_string = jsonencode({
+    poc = "yes"
+  })
+}
+
+# =============================================
+# PASO 2: Manifiestos de Kubernetes
+# =============================================
+
+# -- 2a. Namespace para la POC (si no existe) --
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poc
+---
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eso-poc-sa
+  namespace: external-secrets
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/eso-poc-role # Role created before
+---
+# ClusterSecretStore --
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: aws-sm-poc
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: eu-west-2
+      auth:
+        jwt:
+          serviceAccountRef:
+            name: eso-poc-sa
+            namespace: external-secrets
+---
+# ExternalSecret --
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: poc-external-secret
+  namespace: poc
+spec:
+  refreshInterval: 30s
+  secretStoreRef:
+    name: aws-sm-poc
+    kind: ClusterSecretStore
+  target:
+    name: poc-secret
+  data:
+    - secretKey: poc
+      remoteRef:
+        key: /dev/poc/aws-secret-manager
+        property: poc

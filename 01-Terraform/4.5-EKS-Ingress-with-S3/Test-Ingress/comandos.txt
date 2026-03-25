@@ -1,0 +1,54 @@
+
+# Probar conectividad básica usando el DNS del ALB
+curl -v http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com
+
+# Con el header Host para simular el dominio
+curl -v -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com
+
+# Generar múltiples requests para asegurar que se generen logs
+for i in $(seq 1 50); do
+  curl -s -o /dev/null -w "%{http_code}\n" -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com
+done
+
+# Probar diferentes paths
+curl -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com/
+curl -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com/health
+curl -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com/nonexistent
+
+# Generar tráfico con diferentes métodos HTTP
+curl -X POST -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com
+curl -X PUT -H "Host: demo.example.com" http://k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com
+
+
+Ten en cuenta que los access logs del ALB no se escriben en tiempo real — AWS los entrega cada 5 minutos aproximadamente. Después de generar tráfico, espera unos 5-10 minutos y verifica en S3:
+
+# Listar los logs en el bucket
+aws s3 ls s3://poc-us-east-1-demo-source/poc-alb-accesslogs/ --recursive
+
+# Lo mismo para connection logs
+aws s3 ls s3://poc-us-east-1-demo-source/poc-alb-connectionlogs/ --recursive
+
+# Descargar y ver un log
+aws s3 cp s3://poc-us-east-1-demo-source/poc-alb-accesslogs/ /tmp/alb-logs/ --recursive
+# Los logs vienen comprimidos en .gz
+gunzip /tmp/alb-logs/*.gz
+cat /tmp/alb-logs/*
+
+Si después de 10 minutos no ves nada en S3, verifica que los access logs estén habilitados en el ALB:
+aws elbv2 describe-load-balancer-attributes \
+  --load-balancer-arn $(aws elbv2 describe-load-balancers \
+    --region us-east-1 \
+    --query "LoadBalancers[?DNSName=='k8s-demo-49ec67e7ad-1717609022.us-east-1.elb.amazonaws.com'].LoadBalancerArn" \
+    --output text) \
+  --region us-east-1 \
+  --query "Attributes[?contains(Key,'s3')]" \
+  --output table
+
+aws elbv2 describe-load-balancer-attributes \
+  --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:012345678901:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 \
+  --region us-east-1 \
+  --query "Attributes[?contains(Key,'s3')]" \
+  --output table
+  
+# To check the ALB options enabled
+aws elbv2 describe-load-balancer-attributes --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:012345678901:loadbalancer/app/k8s-demo-49ec67e7ad/d445772afee41d20 --region us-east-1

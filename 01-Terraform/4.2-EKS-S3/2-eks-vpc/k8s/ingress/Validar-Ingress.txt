@@ -1,0 +1,47 @@
+1- Probar HTTP (debería redirigir a HTTPS por ssl-redirect)
+curl -I -H "Host: poc.dev.vficloud.net" "http://ALB-endpoint/"
+curl -kI -H "Host: poc.dev.vficloud.net" "http://ALB-endpoint/"
+# Espera: HTTP/1.1 301 ... Location: https://poc.dev.vficloud.net/
+
+2- Probar HTTPS
+ - Si ya tienes DNS apuntando al ALB:
+    curl -I https://poc.dev.vficloud.net/
+ - Si NO tienes DNS aún (forzar SNI correcto):
+    ALB_IP=$(getent hosts "$ALB" | awk '{print $1}' | head -1)
+    curl -I --resolve "poc.dev.vficloud.net:443:$ALB_IP" https://poc.dev.vficloud.net/
+
+Debe devolver 200 OK (o 403 del Nginx si no hay index, pero ya estarás llegando al backend).
+
+3- Checks rápidos en K8s (por si algo falla)
+kubectl -n poc get ing poc-ingress -o wide
+kubectl -n poc get svc poc-service
+kubectl -n poc get ep  poc-service
+kubectl -n poc get pods -l app=poc -o wide
+
+Verificación del certificado (opcional):
+openssl s_client -servername poc.dev.vficloud.net \
+  -connect k8s-poc-8ba2448172-572220022.eu-west-2.elb.amazonaws.com:443 </dev/null 2>/dev/null \
+| openssl x509 -noout -subject -issuer -dates
+
+
+5- Prueba del ALB (externo)
+# hostname del ALB creado por el Ingress
+ALB=$(kubectl -n poc get ing poc-ingress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'); echo "$ALB"
+
+# HTTP -> debe redirigir a HTTPS (301)
+curl -I -H "Host: poc.dev.vficloud.net" "http://$ALB/"
+
+# HTTPS (si aún no moviste el DNS)
+ALB_IP=$(getent hosts "$ALB" | awk '{print $1}' | head -1)
+curl -I --resolve "poc.dev.vficloud.net:443:$ALB_IP" https://poc.dev.vficloud.net/
+
+
+6) Prueba directa del NodePort (útil para aislar problemas)
+# obtener el NodePort
+NODEPORT=$(kubectl -n poc get svc poc-service -o jsonpath='{.spec.ports[0].nodePort}'); echo "$NODEPORT"
+
+# una IP de nodo
+NODEIP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}'); echo "$NODEIP"
+
+# probar directo al nodo/NodePort (desde una red con alcance a esos nodos)
+curl -I "http://$NODEIP:$NODEPORT/"

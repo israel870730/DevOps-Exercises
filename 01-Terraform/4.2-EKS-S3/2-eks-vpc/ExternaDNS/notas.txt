@@ -1,0 +1,42 @@
+
+
+Pasos:
+
+Instalar ExternaDNS
+kubectl apply -f Deploy-ExternaDNS/externaldns.yaml
+kubectl get po -A | grep dns
+
+Eliminar externalDNS:
+kubectl delete -f Deploy-ExternaDNS/externaldns.yaml
+
+Crear los ingress:
+kubectl apply -f k8s/ingress/ingres-1.yaml
+kubectl apply -f k8s/ingress/ingres-2.yaml
+
+Revisar los ingress:
+kubectl get ing -A
+
+Eliminar ingress:
+kubectl delete -f k8s/ingress/ingres-1.yaml 
+kubectl delete -f k8s/ingress/ingres-2.yaml
+
+Ver los log de externaldns:
+kubectl logs -f deploy/external-dns -n kube-system
+
+Reiniciar pod:
+kubectl rollout restart deploy/external-dns -n kube-system
+
+
+Test
+
+
+kubectl run -it --rm --image=busybox --restart=Never test-pod -- sh
+kubectl run -it --rm --image=alpine --restart=Never test-pod -- sh
+    - apk add --no-cache curl
+nc -v internal-poc-alb-1234567890.elb.amazonaws.com 80
+curl -v http://internal-poc-alb-1234567890.elb.amazonaws.com
+curl -vk https://internal-poc-alb-1234567890.elb.amazonaws.com
+
+
+alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=bucket_name ,access_logs.s3.prefix=prefix_name, connection_logs.s3.enabled=true,connection_logs.s3.bucket=bucket_name ,connection_logs.s3.prefix=prefix_name
+

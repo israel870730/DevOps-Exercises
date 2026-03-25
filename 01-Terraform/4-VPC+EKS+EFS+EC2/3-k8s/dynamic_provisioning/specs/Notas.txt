@@ -1,0 +1,29 @@
+Con esta definición de StorageClass para EFS (Elastic File System) en EKS y el provisioner: efs.csi.aws.com, 
+podemos crear volúmenes automáticamente a través de PersistentVolumeClaims (PVC).
+
+¿Por qué?
+Porque estamos usando el controlador CSI de AWS EFS (efs.csi.aws.com) y tenemos configurado el parámetro:
+provisioningMode: efs-ap
+
+Esto indica que estamos utilizando el modo de aprovisionamiento automático con Access Points, 
+lo que permite que los volúmenes (Access Points en EFS) se creen automáticamente al declarar un PersistentVolumeClaim.
+
+Requisitos que ya tienes bien:
+✅ provisioner: efs.csi.aws.com
+✅ provisioningMode: efs-ap (necesario para autoaprovisionamiento)
+✅ fileSystemId especificado
+✅ allowVolumeExpansion: true (permite redimensionar PVCs si el controlador lo soporta)
+✅ volumeBindingMode: Immediate (los volúmenes se aprovisionan inmediatamente al crear el PVC)
+✅ mountOptions: ["iam"] (para usar EFS con IAM correctamente)
+
+Otro ejemplo:
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-new
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-ID
+  directoryPerms: "755"
+  basePath: "/apps"

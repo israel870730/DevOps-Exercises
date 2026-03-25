@@ -1,0 +1,88 @@
+1-
+credentials=$(aws sts assume-role --role-arn arn:aws:iam::012345678901:role/TerraformRole-Eks --role-session-name "demo" | jq ".Credentials")
+export AWS_ACCESS_KEY_ID=$(echo $credentials | jq -r ".AccessKeyId")
+export AWS_SECRET_ACCESS_KEY=$(echo $credentials | jq -r ".SecretAccessKey")
+export AWS_SESSION_TOKEN=$(echo $credentials | jq -r ".SessionToken")
+
+credentials=$(aws sts assume-role --role-arn arn:aws:iam::154926407884:role/EKS-PlatformSetup-Role --role-session-name "Jenkins-EKS-Setup" | jq ".Credentials")
+export AWS_ACCESS_KEY_ID=$(echo $credentials | jq -r ".AccessKeyId")
+export AWS_SECRET_ACCESS_KEY=$(echo $credentials | jq -r ".SecretAccessKey")
+export AWS_SESSION_TOKEN=$(echo $credentials | jq -r ".SessionToken")
+
+- rolearn: arn:aws:iam::012345678901:role/AWSReservedSSO_AWSAdministratorAccess_fg672023457jk5488c
+      groups:
+      - system:masters
+      username: admin-role
+
+Error: expected ami_type to be one of ["AL2_x86_64" "AL2_x86_64_GPU" "AL2_ARM_64" "CUSTOM" "BOTTLEROCKET_ARM_64" "BOTTLEROCKET_x86_64" "BOTTLEROCKET_ARM_64_FIPS" "BOTTLEROCKET_x86_64_FIPS" "BOTTLEROCKET_ARM_64_NVIDIA" "BOTTLEROCKET_x86_64_NVIDIA" "WINDOWS_CORE_2019_x86_64" "WINDOWS_FULL_2019_x86_64" "WINDOWS_CORE_2022_x86_64" "WINDOWS_FULL_2022_x86_64" "AL2023_x86_64_STANDARD" "AL2023_ARM_64_STANDARD" "AL2023_x86_64_NEURON" "AL2023_x86_64_NVIDIA" "AL2023_ARM_64_NVIDIA"], got AL2023_x86_64_GPU
+#######################################################################################
+## Resumen de los ami_type disponibles en AL2023 (x86_64 y ARM):
+#######################################################################################
+AL2023_x86_64_STANDARD → instancias estándar (general-purpose, compute, memory).
+
+AL2023_x86_64_GPU → instancias con GPU (ej. p3, g4, g5, etc.).
+
+AL2023_ARM_64_STANDARD → instancias ARM (Graviton).
+
+AL2023_ARM_64_NVIDIA → instancias ARM con GPU (menos comunes, como g5g).
+
+#######################################################################################
+## Para Amazon Linux 2 (AL2), los valores de ami_type en un EKS Managed Node Group son:
+########################################################################################
+AL2_x86_64 → AL2 estándar (x86_64)
+
+AL2_x86_64_GPU → AL2 con GPU (x86_64)
+
+AL2_ARM_64 → AL2 en Graviton/ARM64
+
+#################################################################################
+hacer un cluster con instancias spot y on-demands 
+ - Usar tain y tolerations en los nodos
+  - deployar una app en cada uno de los grupo de nodos
+ - tratar de ver como tener 30% de las instancias on-demand y las otras spot
+
+#################################################################################
+
+ helm install aws-node-termination-handler eks/aws-node-termination-handler \
+  --namespace kube-system \
+  --set enableSpotInterruptionDraining=true \
+  --set enableRebalanceMonitoring=true \
+  --set enableRebalanceDraining=true \
+  --set enableScheduledEventDraining=true \
+  --set enablePrometheusMetrics=true
+  --set checkTagBeforeDraining=false
+
+helm upgrade aws-node-termination-handler eks/aws-node-termination-handler \
+  -n kube-system \
+  --reuse-values \
+  --set checkTagBeforeDraining=false \
+  --set checkASGTagBeforeDraining=false
+
+
+
+kubectl rollout status ds/aws-node-termination-handler -n kube-system
+kubectl logs -n kube-system ds/aws-node-termination-handler | head -n 50
+
+helm get manifest aws-node-termination-handler -n kube-system
+helm get values aws-node-termination-handler -n kube-system
+
+
+
+
+#################################################################################
+Tu ClusterRole del chart (cluster-autoscaler-9.21.0) no incluye storage.k8s.io/volumeattachments, por eso ves el forbidden. En el ClusterRole que pegaste aparecen storageclasses, csinodes, csidrivers, csistoragecapacities, pero no volumeattachments.
+
+Tienes dos formas rápidas de arreglarlo:
+
+Opción 1: Patch directo al ClusterRole (rápida)
+kubectl patch clusterrole cluster-autoscaler-aws-cluster-autoscaler \
+  --type='json' \
+  -p='[
+    {"op":"add","path":"/rules/-","value":{
+      "apiGroups":["storage.k8s.io"],
+      "resources":["volumeattachments"],
+      "verbs":["get","list","watch"]
+    }}
+  ]'
+
+https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html#attach-bucket-policy

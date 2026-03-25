@@ -1,0 +1,80 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: external-dns
+  labels:
+    app.kubernetes.io/name: external-dns
+rules:
+  - apiGroups: [""]
+    resources: ["services", "endpoints", "pods", "nodes", "ingresses"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["extensions","networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get","watch","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: external-dns-viewer
+  labels:
+    app.kubernetes.io/name: external-dns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: external-dns
+subjects:
+  - kind: ServiceAccount
+    name: externaldns-sa   # Update service Account Name
+    namespace: kube-system # change to desired namespace: externaldns, kube-addons
+---
+# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws-public-private-route53.md
+# https://github.com/kubernetes-sigs/external-dns/discussions/3255
+# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/registry/registry.md
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: external-dns
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: external-dns
+    spec:
+      serviceAccountName: externaldns-sa # Update
+      containers:
+        - name: external-dns
+          #image: registry.k8s.io/external-dns/external-dns:v0.15.0
+          image: registry.k8s.io/external-dns/external-dns:v0.12.0
+          #imagePullPolicy: Always
+          #image: k8s.gcr.io/external-dns/external-dns:v0.17.0
+          #image: bitnami/external-dns:0.15.0
+          args:
+            - --log-level=debug
+            #- --log-format=text
+            #- --interval=5m
+            #- --events
+            - --source=ingress
+            - --policy=sync # full synchronization
+            #- --policy=upsert-only # would prevent ExternalDNS from deleting any records
+            # external-dns uses TXT records to verify domain ownership and avoid DNS management conflicts.
+            # https://github.com/kubernetes-sigs/external-dns/blob/v0.15.0/docs/registry/registry.md
+            - --registry=txt # ExternalDNS uses TXT records to perform "ownership verification" and avoid conflicts when managing DNS.
+            - --txt-owner-id=demo # Identifies ExternalDNS as the owner of the TXT records.
+            - --provider=aws
+            - --aws-zone-type=private # only look at public hosted zones (valid values are public, private or no value for both)
+            - --domain-filter=example.com # will make ExternalDNS see only the hosted zones matching provided domain, omit to process all available hosted zones
+            - --domain-filter=poc.rancher.com
+            #- --txt-cache-interval=1h
+            #- --txt-prefix=demo
+            #- --txt-owner-id-only
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: us-west-1 # change to region where EKS is installed

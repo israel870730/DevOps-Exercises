@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: demo-2
+  
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app-4
+  namespace: demo-2
+  labels:
+    app: example-app-4
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app-4
+  template:
+    metadata:
+      labels:
+        app: example-app-4
+    spec:
+      containers:
+        - name: example-app-4
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-4-service
+  namespace: demo-2
+  labels:
+    app: example-app-4
+spec:
+  type: ClusterIP
+  selector:
+    app: example-app-4
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-4-ingress
+  namespace: demo-2
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing # de forma privada (internal)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # De esta forma se agrupa todos los Ingress de todos los NS bajo un solo ALB
+    # Si el valor de este tag es igual para todos los ingress, se crea un solo ALB para todos los ingress en todos los NS 
+    #alb.ingress.kubernetes.io/group.name: "example-ingress" 
+    # Si quieres forzar que cada namespace tenga un ALB independiente, podemos poner el nombre del NS aqui
+    alb.ingress.kubernetes.io/group.name: "demo-2" 
+    alb.ingress.kubernetes.io/target-type: ip # Usa ip para pods o instance si estás utilizando nodos EC2 como destino.
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+  labels:
+    app: example-app-4
+spec:
+  ingressClassName: alb
+  rules:
+    #- host: demo-2.poc.rancher.com
+    - host: demo-4.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-app-4-service
+                port:
+                  number: 80

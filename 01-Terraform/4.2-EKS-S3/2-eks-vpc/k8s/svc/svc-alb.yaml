@@ -1,0 +1,44 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-alb
+  namespace: demo-1
+  labels:
+    app: example-alb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-alb
+  template:
+    metadata:
+      labels:
+        app: example-alb
+    spec:
+      containers:
+        - name: example-alb
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-alb
+  namespace: demo-1
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing" # Cambia a "internal" si el ALB es privado.
+    # La anotación service.beta.kubernetes.io/aws-load-balancer-nlb-target-type está diseñada para configurar un NLB, no un ALB. Si esta anotación está presente, Kubernetes tratará de crear un NLB.
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "HTTP" # Protocolo del backend.
+    #service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: "stickiness.enabled=true" # Opcional: para persistencia de sesiones. 
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: example-alb
+  type: LoadBalancer

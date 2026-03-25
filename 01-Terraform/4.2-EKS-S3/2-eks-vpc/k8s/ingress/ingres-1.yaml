@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: demo-1
+  
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app-1
+  namespace: demo-1
+  labels:
+    app: example-app-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app-1
+  template:
+    metadata:
+      labels:
+        app: example-app-1
+    spec:
+      containers:
+        - name: example-app-1
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-1-service
+  namespace: demo-1
+  labels:
+    app: example-app-1
+spec:
+  type: ClusterIP
+  selector:
+    app: example-app-1
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# Ingress ALB
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-1-ingress
+  namespace: demo-1
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internal
+    #alb.ingress.kubernetes.io/scheme: internet-facing # de forma privada (internal)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # https://docs.aws.amazon.com/es_es/elasticloadbalancing/latest/application/enable-access-logging.html
+    #Habilitar el monitoring en el LB del ingress
+    alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=poc-load-balancer-logs-20250131,access_logs.s3.prefix=poc-alb-accesslogs, connection_logs.s3.enabled=true,connection_logs.s3.bucket=poc-load-balancer-logs-20250131,connection_logs.s3.prefix=poc-alb-connectionlogs
+    #alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=poc-load-balancer-logs-20250131,access_logs.s3.prefix=alb-logs
+    # De esta forma se agrupa todos los Ingress de todos los NS bajo un solo ALB
+    # Si el valor de este tag es igual para todos los ingress, se crea un solo ALB para todos los ingress en todos los NS 
+    #alb.ingress.kubernetes.io/group.name: "example-ingress" 
+    # Si quieres forzar que cada namespace tenga un ALB independiente, podemos poner el nombre del NS aqui
+    alb.ingress.kubernetes.io/group.name: "demo-1" 
+    alb.ingress.kubernetes.io/target-type: ip # Usa ip para pods o instance si estás utilizando nodos EC2 como destino.
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+  labels:
+    app: example-app-1
+spec:
+# https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/guide/ingress/ingress_class/#ingressclassparams
+  ingressClassName: alb
+  rules:
+    - host: demo-1.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-app-1-service
+                port:
+                  number: 80
+    # - host: grafana.example.com
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: prometheus-grafana
+    #             port:
+    #               number: 80

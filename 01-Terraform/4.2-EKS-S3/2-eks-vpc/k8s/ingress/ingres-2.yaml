@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: demo-2
+  
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app-2
+  namespace: demo-2
+  labels:
+    app: example-app-2
+spec:
+  replicas: 15
+  selector:
+    matchLabels:
+      app: example-app-2
+  template:
+    metadata:
+      labels:
+        app: example-app-2
+    spec:
+      containers:
+        - name: example-app-2
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "1700m" # ~1.7 vCPU
+              memory: "2Gi"  # ~2 GiB
+            # limits:
+            #   cpu: "2000m"
+            #   memory: "3Gi"
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-2-service
+  namespace: demo-2
+  labels:
+    app: example-app-2
+spec:
+  type: ClusterIP
+  selector:
+    app: example-app-2
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-2-ingress
+  namespace: demo-2
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing # de forma privada (internal)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # De esta forma se agrupa todos los Ingress de todos los NS bajo un solo ALB
+    # Si el valor de este tag es igual para todos los ingress, se crea un solo ALB para todos los ingress en todos los NS 
+    #alb.ingress.kubernetes.io/group.name: "example-ingress" 
+    # Si quieres forzar que cada namespace tenga un ALB independiente, podemos poner el nombre del NS aqui
+    alb.ingress.kubernetes.io/group.name: "demo-2"
+    alb.ingress.kubernetes.io/subnets: subnet-0a9703ed902cd5bef, subnet-0aeb323c9146af0f8, subnet-07a41657c06b53c2e # Update subnet ID
+    alb.ingress.kubernetes.io/target-type: ip # Usa ip para pods o instance si estás utilizando nodos EC2 como destino.
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+  labels:
+    app: example-app-2
+spec:
+  ingressClassName: alb
+  rules:
+    #- host: demo-2.poc.rancher.com
+    - host: demo-2.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-app-2-service
+                port:
+                  number: 80
+
+---
+# pod disruption budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: example-app-2
+  namespace: demo-2
+spec:
+  #minAvailable: 50% # Al menos la mitad de los pods debe permanecer activo
+  maxUnavailable: 0 # Se pueden interrumpir hasta el 50% de los pods
+  selector:
+    matchLabels:
+      app: example-app-2

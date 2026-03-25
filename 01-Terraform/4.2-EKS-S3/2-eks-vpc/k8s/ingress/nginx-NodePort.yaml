@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc
+  namespace: poc
+  labels:
+    app: poc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: poc
+  template:
+    metadata:
+      labels:
+        app: poc
+    spec:
+      containers:
+        - name: poc
+          image: 626635430471.dkr.ecr.eu-west-2.amazonaws.com/docker-hub/ubuntu/nginx
+          ports:
+            - containerPort: 80
+
+---
+# Service (NodePort)
+apiVersion: v1
+kind: Service
+metadata:
+  name: poc-service
+  namespace: poc
+  labels:
+    app: poc
+spec:
+  type: NodePort
+  #externalTrafficPolicy: Local # Hace que cada nodo solo atienda por el NodePort si tiene pods locales. Los nodos sin pods quedarán Unhealthy en el Target Group.
+  selector:
+    app: poc
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+
+---
+# Ingress ALB (instance targets)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: poc-ingress
+  namespace: poc
+  labels:
+    app: poc
+  annotations:
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/subnets: "subnet-0cb967f22f5213692,subnet-0c2eb38c9bdae6845"
+    alb.ingress.kubernetes.io/group.name: "poc"
+    alb.ingress.kubernetes.io/target-type: "instance"
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:eu-west-2:594047390826:certificate/eefc49d5-4ae4-4b43-8d91-4b9ed0b03043"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: poc.dev.vficloud.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: poc-service
+                port:
+                  number: 80

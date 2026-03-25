@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: demo-1
+  
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app-3
+  namespace: demo-1
+  labels:
+    app: example-app-3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app-3
+  template:
+    metadata:
+      labels:
+        app: example-app-3
+    spec:
+      containers:
+        - name: example-app-3
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-3-service
+  namespace: demo-1
+  labels:
+    app: example-app-3
+spec:
+  type: ClusterIP
+  selector:
+    app: example-app-3
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# Ingress ALB
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-3-ingress
+  namespace: demo-1
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internal
+    #alb.ingress.kubernetes.io/scheme: internet-facing # de forma privada (internal)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    # De esta forma se agrupa todos los Ingress de todos los NS bajo un solo ALB
+    # Si el valor de este tag es igual para todos los ingress, se crea un solo ALB para todos los ingress en todos los NS 
+    #alb.ingress.kubernetes.io/group.name: "example-ingress" 
+    # Si quieres forzar que cada namespace tenga un ALB independiente, podemos poner el nombre del NS aqui
+    alb.ingress.kubernetes.io/group.name: "demo-1" 
+    alb.ingress.kubernetes.io/target-type: ip # Usa ip para pods o instance si estás utilizando nodos EC2 como destino.
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+  labels:
+    app: example-app-3
+spec:
+  ingressClassName: alb
+  rules:
+    - host: demo-3.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-app-3-service
+                port:
+                  number: 80
+    # - host: grafana.example.com
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: prometheus-grafana
+    #             port:
+    #               number: 80

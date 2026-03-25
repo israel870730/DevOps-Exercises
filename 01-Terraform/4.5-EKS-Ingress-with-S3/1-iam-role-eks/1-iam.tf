@@ -1,5 +1,10 @@
+provider "aws" {
+  region = local.region
+}
+
 terraform {
   required_version = ">= 1.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -8,12 +13,8 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = local.region
-}
-
 locals {
-  region      = "us-west-1"
+  region      = "us-east-1"
   role_name     = "TerraformRole-Eks"
 }
 
@@ -26,9 +27,9 @@ resource "aws_iam_role" "terraform_role" {
         "Effect" : "Allow",
         "Principal" : {
           "AWS" : [
-            "arn:aws:iam::012345678901:user/poc",
+            #"arn:aws:iam::012345678901:user/poc",
 					  "arn:aws:iam::012345678901:root", # To change
-            #"arn:aws:iam::012345678901:assumed-role/TerraformRole-Eks/demo" # Descomentar despues que se cree el rol y ejecutar terraform otra vez
+            "arn:aws:iam::012345678901:assumed-role/TerraformRole-Eks/demo" # Descomentar despues que se cree el rol y ejecutar terraform otra vez
           ]
         },
         "Action" : "sts:AssumeRole"

@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: demo
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  namespace: demo
+  labels:
+    app: example-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+        - name: example-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          # resources:
+          #   requests:
+          #     cpu: "1700m" # ~1.7 vCPU
+          #     memory: "1Gi"  # ~2 GiB
+            # limits:
+            #   cpu: "2000m"
+            #   memory: "3Gi"
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app-service
+  namespace: demo
+  labels:
+    app: example-app
+spec:
+  type: ClusterIP
+  selector:
+    app: example-app
+  ports:
+    - port: 80
+      targetPort: 80
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-ingress
+  namespace: demo
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing # de forma privada (internal)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/group.name: "demo"
+    alb.ingress.kubernetes.io/subnets: subnet-06c1c720d4af69467, subnet-0bfb233b2463e66f2, subnet-04100bab82c92474f # Update subnet ID
+    alb.ingress.kubernetes.io/target-type: ip # Usa ip para pods o instance si estás utilizando nodos EC2 como destino.
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
+      {"Type": "redirect", "RedirectConfig": {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}
+  labels:
+    app: example-app
+spec:
+  ingressClassName: alb
+  rules:
+    - host: demo.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: example-app-service
+                port:
+                  number: 80

@@ -1,0 +1,38 @@
+clusterName: ${cluster_name}
+# Enable Shield addon for ALB (default true)
+enableShield: false
+# Enable WAF addon for ALB (default true)
+enableWaf: false
+#
+# Enable WAF V2 addon for ALB (default true)
+enableWafv2: false
+defaultTags:
+  ${tags_values}
+# Habilitando S3 para salvar los logs de todos los ALB por default
+ingressClassParams:
+  create: true
+  name: alb
+  spec:
+    loadBalancerAttributes:
+      # access_logs
+      - key: access_logs.s3.enabled
+        value: "true"
+      - key: access_logs.s3.bucket
+        value: "${bucket_name}"
+      - key: access_logs.s3.prefix
+        value: "poc-alb-accesslogs"
+      # connection_logs
+      - key: connection_logs.s3.enabled
+        value: "true"
+      - key: connection_logs.s3.bucket
+        value: "${bucket_name}"
+      - key: connection_logs.s3.prefix
+        value: "poc-alb-connectionlogs"
+      # health_check
+      - key: health_check_logs.s3.enabled
+        value: "true"
+      - key: health_check_logs.s3.bucket
+        value: "${bucket_name}"
+      - key: health_check_logs.s3.prefix
+        value: "poc-alb-healthchecklogs"
+      

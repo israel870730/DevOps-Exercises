@@ -103,4 +103,14 @@ no es facil aprenderse todos los comando para trabajr con K8S, por eso es muy bu
 Ayuda en línea de comandos: Aprender a utilizar la ayuda que nos ofrece la línea de comandos de Kubernetes, con comandos como 'explain' y 'help', 
 nos permite aclarar dudas rápidamente y nos vuelve más ágiles a la hora de trabajar.
 
+#################################################################################################################################
+15- Obtener el id de los worker node para conectarme mediante 'session-manager'
 
+kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.labels.kubernetes\.io/hostname}{"\t"}{.metadata.labels.eks\.amazonaws\.com/nodegroup}{"\t"}{.spec.providerID}{"\n"}{end}' | awk -F'/' '{print $1 $NF}'
+
+#################################################################################################################################
+16- Para ver si el GPU esta funcionado de forma correcta
+
+kubectl get nodes -o=custom-columns=NAME:.metadata.name,GPUs:.status.allocatable.'nvidia\.com/gpu'
+
+si no se ve el '1', es pq el pluggin de GPU no esta habilitado en el cluster

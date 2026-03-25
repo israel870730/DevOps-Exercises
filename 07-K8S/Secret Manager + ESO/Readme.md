@@ -1,0 +1,1 @@
+# Integracion entre AWS secret mamager y external secret operator(ESO)

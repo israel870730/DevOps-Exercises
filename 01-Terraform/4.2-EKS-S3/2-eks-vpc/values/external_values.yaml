@@ -1,0 +1,31 @@
+# https://github.com/bitnami/charts/blob/main/bitnami/external-dns/Chart.yaml
+# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws-public-private-route53.md
+# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws.md
+# https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/v4.32.1/modules/kubernetes-addons/main.tf
+
+# Para ver todas las opciones de externalDNS
+# https://github.com/bitnami/charts/tree/main/bitnami/external-dns
+domainFilters:
+  #- "example.com"  # Reemplaza con tu dominio principal
+  - "aws.vcs.test"
+
+# domains:
+#   - filterType: "Include"  # Incluir solo este dominio
+#     matchType: "Domain"   # Filtrar por dominio exacto
+#     name: "example.com."   # Reemplaza con tu dominio en Route53
+
+txtOwnerId: "poc"  # Identificador único para TXT records (usado para evitar conflictos)
+txtPrefix: ""  # Opcional: Deja vacío para no añadir prefijos a los registros TXT
+
+#policy: "upsert-only"  # Solo actualiza registros; no los elimina
+policy: "sync"         # Permite que ExternalDNS elimine registros que ya no son necesarios.
+
+serviceAccount:
+  create: true
+  name: external-dns-sa  # Nombre del ServiceAccount usado por ExternalDNS
+
+providers:
+  aws:
+    zoneType: "private."  # Especifica si trabajas con zonas públicas o privadas (puedes usar "all" si aplicable)
+
+logLevel: "info"  # Nivel de logging para monitorear la actividad (puedes cambiarlo a "debug" para diagnóstico)
