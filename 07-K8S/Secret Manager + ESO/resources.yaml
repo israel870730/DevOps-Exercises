@@ -88,6 +88,9 @@ resource "aws_secretsmanager_secret_version" "poc_value" {
 # PASO 2: Manifiestos de Kubernetes
 # =============================================
 
+##### Nota ##### 
+# Antes de ejecutar esto ya deberia estar instalado el External Secret Operator en el cluster
+
 # -- 2a. Namespace para la POC (si no existe) --
 ---
 apiVersion: v1
