@@ -154,6 +154,31 @@
   .admin-header { display: flex; justify-content: space-between; align-items: center; }
   .hint { font-size: 11px; opacity: 0.3; margin-top: -8px; line-height: 1.5; }
 
+  /* Edit table */
+  .edit-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .edit-table th {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.4;
+    padding: 6px 4px; text-align: left; font-weight: 600;
+  }
+  .edit-table td { padding: 4px; }
+  .edit-table input {
+    width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; padding: 7px 8px; color: #fff; font-family: 'Poppins', sans-serif;
+    font-size: 12px; outline: none;
+  }
+  .edit-table input:focus { border-color: rgba(100,200,255,0.4); }
+  .edit-table input[type="number"] { width: 60px; text-align: center; }
+  .edit-btn-save {
+    background: rgba(100,200,100,0.15); border: 1px solid rgba(100,200,100,0.3); color: #6ee7b7;
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600;
+  }
+  .edit-btn-del {
+    background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: #f87171;
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600;
+  }
+  .edit-btn-save:hover { background: rgba(100,200,100,0.25); }
+  .edit-btn-del:hover { background: rgba(248,113,113,0.25); }
+
   /* ── CONTACT FOOTER ── */
   .contact-footer { width: 100%; margin-top: 40px; padding: 40px 20px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.06); display: none; flex-direction: column; align-items: center; gap: 16px; }
   .contact-footer.show { display: flex; }
@@ -264,6 +289,13 @@
   <div class="admin-row">
     <button class="admin-btn btn-danger" onclick="if(confirm('¿Borrar TODOS los datos del ranking?')) { rankingData={torneos:[],jugadores:{M:{},F:{}}}; saveRanking(); renderAll(); }">Borrar todo el ranking</button>
   </div>
+
+  <label>Editar / Eliminar jugadores</label>
+  <div class="admin-row">
+    <select id="editGender" onchange="loadEditTable()"><option value="M">Masculino</option><option value="F">Femenino</option></select>
+    <select id="editTorneo" onchange="loadEditTable()"></select>
+  </div>
+  <div id="editTableContainer" style="overflow-x:auto;"></div>
 </div>
 
 <!-- Contact footer -->
@@ -439,6 +471,7 @@
       isAdmin = true; hideLogin();
       document.getElementById('adminPanel').classList.add('visible');
       updateAdminSelects();
+      loadEditTable();
     } else {
       document.getElementById('errorMsg').style.display = 'block';
       document.getElementById('passInput').value = '';
@@ -451,7 +484,7 @@
   }
 
   function updateAdminSelects() {
-    ['csvTorneo', 'addTorneo'].forEach(id => {
+    ['csvTorneo', 'addTorneo', 'editTorneo'].forEach(id => {
       const sel = document.getElementById(id);
       sel.innerHTML = rankingData.torneos.map(t => `<option value="${t}">${t}</option>`).join('');
     });
@@ -514,6 +547,58 @@
     ['addName','addClub','addPJ','addPG'].forEach(id => document.getElementById(id).value = '');
     renderAll();
     alert(`${name} agregado/actualizado en ${torneo}`);
+  }
+
+  // ── EDIT / DELETE PLAYERS ──
+  function loadEditTable() {
+    const gender = document.getElementById('editGender').value;
+    const torneo = document.getElementById('editTorneo').value;
+    const container = document.getElementById('editTableContainer');
+    const players = (rankingData.jugadores[gender] || {})[torneo] || [];
+
+    if (!torneo || !players.length) {
+      container.innerHTML = '<div style="font-size:12px;opacity:0.3;padding:12px;">No hay jugadores en este torneo.</div>';
+      return;
+    }
+
+    let html = `<table class="edit-table">
+      <thead><tr><th>Nombre</th><th>Club</th><th>PJ</th><th>PG</th><th></th><th></th></tr></thead><tbody>`;
+
+    players.forEach((p, i) => {
+      html += `<tr>
+        <td><input type="text" id="en_${i}" value="${p.name}"></td>
+        <td><input type="text" id="ec_${i}" value="${p.club || ''}"></td>
+        <td><input type="number" id="epj_${i}" value="${p.pj}" min="0"></td>
+        <td><input type="number" id="epg_${i}" value="${p.pg}" min="0"></td>
+        <td><button class="edit-btn-save" onclick="savePlayer('${gender}','${torneo}',${i})">Guardar</button></td>
+        <td><button class="edit-btn-del" onclick="deletePlayer('${gender}','${torneo}',${i})">Eliminar</button></td>
+      </tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  function savePlayer(gender, torneo, idx) {
+    const p = rankingData.jugadores[gender][torneo][idx];
+    p.name = document.getElementById(`en_${idx}`).value.trim();
+    p.club = document.getElementById(`ec_${idx}`).value.trim();
+    p.pj = parseInt(document.getElementById(`epj_${idx}`).value) || 0;
+    p.pg = parseInt(document.getElementById(`epg_${idx}`).value) || 0;
+    if (p.pg > p.pj) p.pg = p.pj;
+    saveRanking();
+    renderAll();
+    loadEditTable();
+    alert(`${p.name} actualizado`);
+  }
+
+  function deletePlayer(gender, torneo, idx) {
+    const name = rankingData.jugadores[gender][torneo][idx].name;
+    if (!confirm(`¿Eliminar a ${name} de ${torneo}?`)) return;
+    rankingData.jugadores[gender][torneo].splice(idx, 1);
+    saveRanking();
+    renderAll();
+    loadEditTable();
   }
 
   // ── CONTACT ──

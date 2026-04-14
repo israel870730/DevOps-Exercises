@@ -7,9 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap');
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     min-height: 100vh;
     background: #0a0a1a;
@@ -22,461 +20,86 @@
   }
 
   /* ── NAVBAR ── */
-  .navbar {
-    width: 100%;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .nav-link {
-    color: #fff;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 8px 20px;
-    border-radius: 10px;
-    opacity: 0.4;
-    transition: all 0.3s;
-  }
+  .navbar { width: 100%; padding: 16px 24px; display: flex; justify-content: center; gap: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .nav-link { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 8px 20px; border-radius: 10px; opacity: 0.4; transition: all 0.3s; }
   .nav-link:hover { opacity: 0.8; background: rgba(255,255,255,0.05); }
   .nav-link.active { opacity: 1; background: rgba(100,200,255,0.1); }
 
-  /* ── LOGIN ADMIN ── */
-  .admin-trigger {
-    position: fixed;
-    bottom: 16px;
-    right: 16px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    opacity: 0.15;
-    transition: opacity 0.3s;
-    z-index: 100;
-  }
+  /* ── LOGIN ── */
+  .admin-trigger { position: fixed; bottom: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0.15; transition: opacity 0.3s; z-index: 100; }
   .admin-trigger:hover { opacity: 0.5; }
-
-  .login-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(10px);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
+  .login-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); z-index: 200; align-items: center; justify-content: center; }
   .login-overlay.show { display: flex; }
-
-  .login-box {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 20px;
-    padding: 36px;
-    width: min(380px, 90%);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    text-align: center;
-  }
+  .login-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 36px; width: min(380px, 90%); display: flex; flex-direction: column; gap: 16px; text-align: center; }
   .login-box h3 { font-size: 16px; font-weight: 600; opacity: 0.8; }
   .login-box .error-msg { color: #f87171; font-size: 13px; display: none; }
-
-  .login-box input[type="password"] {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    outline: none;
-    text-align: center;
-    letter-spacing: 4px;
-  }
+  .login-box input[type="password"] { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 16px; color: #fff; font-family: 'Poppins', sans-serif; font-size: 15px; outline: none; text-align: center; letter-spacing: 4px; }
   .login-box input:focus { border-color: rgba(100,200,255,0.5); }
-
   .btn-row { display: flex; gap: 10px; }
-  .btn-row button {
-    flex: 1;
-    padding: 10px;
-    border-radius: 12px;
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
+  .btn-row button { flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
   .btn-enter { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
   .btn-enter:hover { opacity: 0.85; }
   .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
   .btn-cancel:hover { background: rgba(255,255,255,0.15); }
 
   /* ── CONFIG PANEL ── */
-  .config-panel {
-    display: none;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px 20px 0;
-    width: min(500px, 90%);
-    flex-direction: column;
-    gap: 16px;
-    animation: fadeIn 0.4s ease;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
+  .config-panel { display: none; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin: 30px 20px 0; width: min(500px, 90%); flex-direction: column; gap: 16px; animation: fadeIn 0.4s ease; max-height: 80vh; overflow-y: auto; }
   .config-panel.visible { display: flex; }
-
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-  .config-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .config-header h3 {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.7;
-  }
-  .btn-logout {
-    background: rgba(248,113,113,0.15);
-    border: 1px solid rgba(248,113,113,0.3);
-    color: #f87171;
-    padding: 6px 14px;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
+  .config-header { display: flex; justify-content: space-between; align-items: center; }
+  .config-header h3 { font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+  .btn-logout { background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: #f87171; padding: 6px 14px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
   .btn-logout:hover { background: rgba(248,113,113,0.25); }
-
   label { font-size: 13px; opacity: 0.6; margin-bottom: -8px; }
-  input[type="text"], input[type="datetime-local"], textarea {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.3s;
-  }
+  input[type="text"], input[type="datetime-local"], textarea { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 16px; color: #fff; font-family: 'Poppins', sans-serif; font-size: 15px; outline: none; transition: border-color 0.3s; }
   textarea { resize: vertical; min-height: 80px; font-size: 13px; line-height: 1.6; }
   input:focus, textarea:focus { border-color: rgba(100,200,255,0.5); }
-
-  .pos-options { display: flex; gap: 10px; }
-  .pos-options button {
-    flex: 1;
-    padding: 8px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  .pos-options button.active { background: rgba(100,200,255,0.15); border-color: rgba(100,200,255,0.4); }
-
-  .file-drop {
-    border: 2px dashed rgba(255,255,255,0.2);
-    border-radius: 14px;
-    padding: 24px;
-    text-align: center;
-    font-size: 13px;
-    opacity: 0.5;
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .file-drop:hover { border-color: rgba(100,200,255,0.4); opacity: 0.8; }
-  .file-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-
-  .btn-remove-img {
-    background: rgba(248,113,113,0.15);
-    border: 1px solid rgba(248,113,113,0.3);
-    color: #f87171;
-    padding: 8px;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    display: none;
-    transition: all 0.3s;
-  }
-  .btn-remove-img.show { display: block; }
-
-  .section-divider {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 16px;
-    margin-top: 4px;
-  }
-
-  .config-hint {
-    font-size: 11px;
-    opacity: 0.35;
-    margin-top: -10px;
-    line-height: 1.4;
-  }
+  .section-divider { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; margin-top: 4px; }
 
   /* ── MAIN DISPLAY ── */
-  .display-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    flex: 1;
-    padding: 40px 20px 0;
-    gap: 30px;
-  }
-
-  .event-title {
-    font-size: clamp(24px, 5vw, 48px);
-    font-weight: 800;
-    text-align: center;
-    background: linear-gradient(135deg, #64c8ff, #c084fc, #f472b6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-  }
-
-  .event-subtitle {
-    font-size: clamp(12px, 2vw, 16px);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    opacity: 0.35;
-    margin-top: -20px;
-  }
+  .display-area { display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1; padding: 40px 20px 0; gap: 30px; }
+  .event-title { font-size: clamp(24px, 5vw, 48px); font-weight: 800; text-align: center; background: linear-gradient(135deg, #64c8ff, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+  .event-subtitle { font-size: clamp(12px, 2vw, 16px); font-weight: 600; text-transform: uppercase; letter-spacing: 5px; opacity: 0.35; margin-top: -20px; }
   .event-subtitle:empty { display: none; }
-
-  .event-location {
-    font-size: clamp(14px, 2.5vw, 22px);
-    font-weight: 300;
-    text-align: center;
-    opacity: 0.5;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-top: -10px;
-  }
+  .event-location { font-size: clamp(14px, 2.5vw, 22px); font-weight: 300; text-align: center; opacity: 0.5; letter-spacing: 3px; text-transform: uppercase; margin-top: -10px; }
   .event-location::before { content: '📍 '; }
   .event-location:empty { display: none; }
-
-  .event-image {
-    width: min(700px, 90%);
-    border-radius: 20px;
-    overflow: hidden;
-    display: none;
-    text-align: center;
-  }
+  .event-image { width: min(700px, 90%); border-radius: 20px; overflow: hidden; display: none; text-align: center; }
   .event-image.show { display: block; }
-  .event-image img {
-    width: 100%;
-    display: block;
-    max-height: 500px;
-    object-fit: contain;
-  }
-
-  .countdown-container {
-    display: flex;
-    gap: clamp(12px, 3vw, 30px);
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .time-block {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: clamp(16px, 3vw, 30px) clamp(20px, 4vw, 40px);
-    text-align: center;
-    min-width: clamp(80px, 15vw, 140px);
-    position: relative;
-    overflow: hidden;
-  }
-  .time-block::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #64c8ff, #c084fc);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+  .event-image img { width: 100%; display: block; max-height: 500px; object-fit: contain; }
+  .countdown-container { display: flex; gap: clamp(12px, 3vw, 30px); flex-wrap: wrap; justify-content: center; }
+  .time-block { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: clamp(16px, 3vw, 30px) clamp(20px, 4vw, 40px); text-align: center; min-width: clamp(80px, 15vw, 140px); position: relative; overflow: hidden; }
+  .time-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #64c8ff, #c084fc); opacity: 0; transition: opacity 0.3s; }
   .time-block:hover::before { opacity: 1; }
-
-  .time-value {
-    font-size: clamp(36px, 8vw, 72px);
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.5));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: transform 0.3s;
-  }
+  .time-value { font-size: clamp(36px, 8vw, 72px); font-weight: 800; line-height: 1; background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.5)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; transition: transform 0.3s; }
   .time-block:hover .time-value { transform: scale(1.05); }
-
-  .time-label {
-    font-size: clamp(10px, 1.5vw, 14px);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    opacity: 0.4;
-    margin-top: 8px;
-    font-weight: 600;
-  }
-
-  .finished {
-    font-size: clamp(28px, 5vw, 52px);
-    font-weight: 800;
-    text-align: center;
-    background: linear-gradient(135deg, #34d399, #64c8ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: pulse 2s ease-in-out infinite;
-  }
+  .time-label { font-size: clamp(10px, 1.5vw, 14px); text-transform: uppercase; letter-spacing: 3px; opacity: 0.4; margin-top: 8px; font-weight: 600; }
+  .finished { font-size: clamp(28px, 5vw, 52px); font-weight: 800; text-align: center; background: linear-gradient(135deg, #34d399, #64c8ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
 
+  /* ── EXIT MODAL ── */
+  .exit-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 300; align-items: center; justify-content: center; animation: fadeIn 0.4s ease; }
+  .exit-overlay.show { display: flex; }
+  .exit-box { text-align: center; padding: 50px 40px; max-width: 420px; }
+  .exit-emoji { font-size: 60px; margin-bottom: 20px; }
+  .exit-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; background: linear-gradient(135deg, #64c8ff, #c084fc, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px; }
+  .exit-msg { font-size: 16px; opacity: 0.5; font-weight: 300; line-height: 1.6; }
+
   /* ── CONTACT FOOTER ── */
-  .contact-footer {
-    width: 100%;
-    margin-top: 40px;
-    padding: 40px 20px;
-    background: rgba(255,255,255,0.03);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
+  .contact-footer { width: 100%; margin-top: 40px; padding: 40px 20px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.06); display: none; flex-direction: column; align-items: center; gap: 16px; }
   .contact-footer.show { display: flex; }
-
-  .contact-title {
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    opacity: 0.3;
-    margin-bottom: 4px;
-  }
-
-  .contact-org {
-    font-size: clamp(14px, 2vw, 17px);
-    font-weight: 600;
-    text-align: center;
-    opacity: 0.8;
-  }
-
-  .contact-phones {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px 24px;
-  }
-  .contact-phone {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-size: 14px;
-    text-decoration: none;
-    color: #fff;
-    opacity: 0.7;
-    transition: all 0.3s;
-    border-radius: 12px;
-  }
+  .contact-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; opacity: 0.3; margin-bottom: 4px; }
+  .contact-org { font-size: clamp(14px, 2vw, 17px); font-weight: 600; text-align: center; opacity: 0.8; }
+  .contact-phones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; }
+  .contact-phone { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 18px; font-size: 14px; text-decoration: none; color: #fff; opacity: 0.7; transition: all 0.3s; }
   .contact-phone:hover { opacity: 1; background: rgba(100,200,255,0.1); border-color: rgba(100,200,255,0.3); }
   .contact-phone .wa-icon { flex-shrink: 0; }
   .contact-phone .phone-name { font-weight: 600; }
-
-  .contact-email {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    opacity: 0.5;
-    margin-top: 4px;
-  }
-  .contact-email a {
-    color: #64c8ff;
-    text-decoration: none;
-    transition: opacity 0.3s;
-  }
+  .contact-email { display: flex; align-items: center; gap: 8px; font-size: 14px; opacity: 0.5; margin-top: 4px; }
+  .contact-email a { color: #64c8ff; text-decoration: none; transition: opacity 0.3s; }
   .contact-email a:hover { opacity: 0.7; }
 
-  /* ── EXIT MODAL ── */
-  .exit-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(20px);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.4s ease;
-  }
-  .exit-overlay.show { display: flex; }
-
-  .exit-box {
-    text-align: center;
-    padding: 50px 40px;
-    max-width: 420px;
-  }
-  .exit-emoji { font-size: 60px; margin-bottom: 20px; }
-  .exit-title {
-    font-size: clamp(24px, 4vw, 36px);
-    font-weight: 800;
-    background: linear-gradient(135deg, #64c8ff, #c084fc, #f472b6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 12px;
-  }
-  .exit-msg {
-    font-size: 16px;
-    opacity: 0.5;
-    font-weight: 300;
-    line-height: 1.6;
-  }
-
-  .bg-orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.15;
-    pointer-events: none;
-    z-index: -1;
-  }
+  .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.15; pointer-events: none; z-index: -1; }
   .bg-orb.a { width: 500px; height: 500px; background: #6366f1; top: -100px; left: -100px; animation: floatA 12s ease-in-out infinite; }
   .bg-orb.b { width: 400px; height: 400px; background: #f472b6; bottom: -100px; right: -100px; animation: floatB 15s ease-in-out infinite; }
   @keyframes floatA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(80px,60px); } }
@@ -484,6 +107,9 @@
 </style>
 </head>
 <body>
+
+<div class="bg-orb a"></div>
+<div class="bg-orb b"></div>
 
 <!-- Navbar -->
 <nav class="navbar">
@@ -502,17 +128,14 @@
   </div>
 </div>
 
-<div class="bg-orb a"></div>
-<div class="bg-orb b"></div>
-
-<!-- Botón discreto para abrir login -->
+<!-- Admin trigger -->
 <div class="admin-trigger" onclick="showLogin()" title="Admin">⚙</div>
 
-<!-- Overlay de login -->
+<!-- Login -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <h3>Acceso Administrador</h3>
-    <input type="password" id="passInput" placeher="••••••" onkeydown="if(event.key==='Enter') tryLogin()">
+    <input type="password" id="passInput" placeholder="••••••" onkeydown="if(event.key==='Enter') tryLogin()">
     <div class="error-msg" id="errorMsg">Contraseña incorrecta</div>
     <div class="btn-row">
       <button class="btn-cancel" onclick="hideLogin()">Cancelar</button>
@@ -521,7 +144,7 @@
   </div>
 </div>
 
-<!-- Panel de configuración -->
+<!-- Admin panel -->
 <div class="config-panel" id="configPanel">
   <div class="config-header">
     <h3>Panel de Administración</h3>
@@ -540,27 +163,13 @@
   <label>Fecha y hora del evento</label>
   <input type="datetime-local" id="eventDate" onchange="saveAndUpdate()">
 
-  <label>Imagen del evento</label>
-  <div class="file-drop" id="fileDrop">
-    Arrastra una imagen aquí o haz clic para seleccionar
-    <input type="file" accept="image/*" onchange="handleFile(event)">
-  </div>
-  <button class="btn-remove-img" id="btnRemoveImg" onclick="removeImage()">Quitar imagen</button>
-
-  <label>Posición de la imagen</label>
-  <div class="pos-options">
-    <button id="posAbove" class="active" onclick="setPosition('above', this)">Arriba del contador</button>
-    <button id="posBelow" onclick="setPosition('below', this)">Debajo del contador</button>
-  </div>
-
   <div class="section-divider">
     <label>Organización / Título de contacto</label>
     <input type="text" id="contactOrg" placeholder="Amigos del Tejo" oninput="saveAndUpdate()" style="margin-top:8px;">
   </div>
 
   <label>Contactos (uno por línea: Nombre - Teléfono)</label>
-  <textarea id="contactPhones" placeholder="Sandra - 095221275&#10;Juan - 095503914&#10;Christian - 095194244" oninput="saveAndUpdate()"></textarea>
-  <div class="config-hint">Formato: Nombre - Teléfono (uno por línea)</div>
+  <textarea id="contactPhones" placeholder="Sandra - 095221275&#10;Juan - 095503914" oninput="saveAndUpdate()"></textarea>
 
   <label>Correo electrónico</label>
   <input type="text" id="contactEmail" placeholder="josebentancur1@hotmail.com" oninput="saveAndUpdate()">
@@ -573,16 +182,17 @@
 </div>
 
 <!-- Display público -->
-<div class="display-area" id="displayArea">
+<div class="display-area">
   <div class="event-title" id="titleDisplay"></div>
   <div class="event-subtitle" id="subtitleDisplay"></div>
   <div class="event-location" id="locationDisplay"></div>
   <div class="countdown-container" id="countdown"></div>
-  <div class="event-image" id="imageAbove"><img id="imgAbove"></div>
-  <div class="event-image" id="imageBelow"><img id="imgBelow"></div>
+  <div class="event-image" id="eventImage">
+    <img id="eventImg" src="portada.png" alt="Tour Challenger Tejo">
+  </div>
 </div>
 
-<!-- Contacto footer -->
+<!-- Contact footer -->
 <div class="contact-footer" id="contactFooter">
   <div class="contact-title">Contacto & Organización</div>
   <div class="contact-org" id="contactOrgDisplay"></div>
@@ -598,8 +208,6 @@
     name: 'Tour Challenger Tejo',
     location: 'Montevideo, Uruguay',
     date: '',
-    imgData: null,
-    imgPos: 'below',
     contactOrg: 'Amigos del Tejo',
     contactPhones: 'Sandra - 095221275\nJuan - 095503914\nChristian - 095194244\nJose - 099793727',
     contactEmail: 'josebentancur1@hotmail.com',
@@ -607,7 +215,6 @@
   };
   let interval = null;
   let isAdmin = false;
-
   const pad2 = n => String(n).padStart(2, '0');
 
   // ── PERSISTENCE ──
@@ -634,31 +241,18 @@
     document.getElementById('errorMsg').style.display = 'none';
     setTimeout(() => document.getElementById('passInput').focus(), 100);
   }
-
-  function hideLogin() {
-    document.getElementById('loginOverlay').classList.remove('show');
-  }
-
+  function hideLogin() { document.getElementById('loginOverlay').classList.remove('show'); }
   function tryLogin() {
-    const val = document.getElementById('passInput').value;
-    if (val === config.password) {
-      isAdmin = true;
-      hideLogin();
-      openAdmin();
+    if (document.getElementById('passInput').value === config.password) {
+      isAdmin = true; hideLogin(); openAdmin();
     } else {
       document.getElementById('errorMsg').style.display = 'block';
       document.getElementById('passInput').value = '';
     }
   }
-
-  function logout() {
-    isAdmin = false;
-    document.getElementById('configPanel').classList.remove('visible');
-  }
-
+  function logout() { isAdmin = false; document.getElementById('configPanel').classList.remove('visible'); }
   function openAdmin() {
-    const panel = document.getElementById('configPanel');
-    panel.classList.add('visible');
+    document.getElementById('configPanel').classList.add('visible');
     document.getElementById('eventSubtitle').value = config.subtitle || '';
     document.getElementById('eventName').value = config.name;
     document.getElementById('eventLocation').value = config.location || '';
@@ -666,114 +260,45 @@
     document.getElementById('contactOrg').value = config.contactOrg || '';
     document.getElementById('contactPhones').value = config.contactPhones || '';
     document.getElementById('contactEmail').value = config.contactEmail || '';
-
-    if (config.imgData) {
-      document.getElementById('fileDrop').textContent = '✓ Imagen cargada — clic para cambiar';
-      rebuildFileInput();
-      document.getElementById('btnRemoveImg').classList.add('show');
-    }
-
-    document.querySelectorAll('.pos-options button').forEach(b => b.classList.remove('active'));
-    document.getElementById(config.imgPos === 'above' ? 'posAbove' : 'posBelow').classList.add('active');
   }
-
   function changePassword() {
     const val = document.getElementById('newPass').value.trim();
     if (val.length < 3) return;
-    config.password = val;
-    saveConfig();
+    config.password = val; saveConfig();
     document.getElementById('newPass').value = '';
     alert('Contraseña actualizada');
   }
 
-  // ── IMAGE ──
-  function handleFile(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      config.imgData = ev.target.result;
-      saveConfig();
-      renderImage();
-      document.getElementById('fileDrop').textContent = '✓ Imagen cargada — clic para cambiar';
-      rebuildFileInput();
-      document.getElementById('btnRemoveImg').classList.add('show');
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function rebuildFileInput() {
-    const existing = document.querySelector('#fileDrop input');
-    if (existing) existing.remove();
-    const inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*';
-    inp.onchange = handleFile;
-    inp.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer;';
-    document.getElementById('fileDrop').appendChild(inp);
-  }
-
-  function removeImage() {
-    config.imgData = null;
-    saveConfig();
-    renderImage();
-    document.getElementById('fileDrop').textContent = 'Arrastra una imagen aquí o haz clic para seleccionar';
-    rebuildFileInput();
-    document.getElementById('btnRemoveImg').classList.remove('show');
-  }
-
-  function setPosition(pos, btn) {
-    config.imgPos = pos;
-    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    saveConfig();
-    renderImage();
-  }
-
-  function renderImage() {
-    const above = document.getElementById('imageAbove');
-    const below = document.getElementById('imageBelow');
-    above.classList.remove('show');
-    below.classList.remove('show');
-    if (!config.imgData) return;
-    if (config.imgPos === 'above') {
-      document.getElementById('imgAbove').src = config.imgData;
-      above.classList.add('show');
-    } else {
-      document.getElementById('imgBelow').src = config.imgData;
-      below.classList.add('show');
-    }
+  // ── IMAGE (estática) ──
+  function initImage() {
+    const container = document.getElementById('eventImage');
+    const img = document.getElementById('eventImg');
+    img.onload = function() { container.classList.add('show'); };
+    img.onerror = function() { container.classList.remove('show'); };
+    if (img.complete && img.naturalWidth > 0) container.classList.add('show');
   }
 
   // ── CONTACT ──
   function renderContact() {
     const footer = document.getElementById('contactFooter');
-    const hasContent = config.contactOrg || config.contactPhones || config.contactEmail;
-    footer.classList.toggle('show', !!hasContent);
-
+    footer.classList.toggle('show', !!(config.contactOrg || config.contactPhones || config.contactEmail));
     document.getElementById('contactOrgDisplay').textContent = config.contactOrg || '';
-
     const phonesEl = document.getElementById('contactPhonesDisplay');
     phonesEl.innerHTML = '';
     if (config.contactPhones) {
       config.contactPhones.split('\n').filter(l => l.trim()).forEach(line => {
         const parts = line.split('-').map(s => s.trim());
-        const name = parts[0] || '';
-        const phone = parts[1] || '';
+        const name = parts[0] || '', phone = parts[1] || '';
         const cleanPhone = '598' + phone.replace(/\s/g,'').replace(/^0/,'');
         const a = document.createElement('a');
-        a.className = 'contact-phone';
-        a.href = phone ? `https://wa.me/${cleanPhone}` : '#';
-        a.target = '_blank';
+        a.className = 'contact-phone'; a.href = phone ? `https://wa.me/${cleanPhone}` : '#'; a.target = '_blank';
         a.innerHTML = `<svg class="wa-icon" viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16.01 2.93C8.84 2.93 3.02 8.74 3.02 15.9c0 2.29.6 4.52 1.74 6.49L3 29.07l6.87-1.8a12.93 12.93 0 006.14 1.56h.01c7.16 0 12.98-5.81 12.98-12.97 0-3.47-1.35-6.72-3.8-9.17a12.9 12.9 0 00-9.19-3.76zm0 23.7a10.72 10.72 0 01-5.48-1.5l-.39-.23-4.08 1.07 1.09-3.97-.26-.41a10.7 10.7 0 01-1.64-5.69c0-5.94 4.84-10.77 10.78-10.77 2.88 0 5.58 1.12 7.61 3.15a10.7 10.7 0 013.15 7.63c0 5.94-4.84 10.77-10.78 10.77v-.05zm5.91-8.07c-.32-.16-1.91-.94-2.21-1.05-.29-.11-.51-.16-.72.16-.21.32-.82 1.05-1.01 1.26-.18.21-.37.24-.69.08-.32-.16-1.36-.5-2.58-1.6-.96-.85-1.6-1.9-1.79-2.22-.18-.32-.02-.5.14-.66.15-.14.32-.37.49-.56.16-.18.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.74-.99-2.38-.26-.63-.53-.54-.72-.55h-.62c-.21 0-.56.08-.85.4-.29.32-1.12 1.1-1.12 2.67 0 1.58 1.15 3.1 1.31 3.31.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.83.67.77.24 1.47.21 2.02.13.62-.09 1.91-.78 2.18-1.54.27-.75.27-1.4.19-1.54-.08-.13-.29-.21-.62-.37z"/></svg><span class="phone-name">${name}</span>${phone ? ' — ' + phone : ''}`;
         phonesEl.appendChild(a);
       });
     }
-
     const emailEl = document.getElementById('contactEmailDisplay');
     emailEl.innerHTML = '';
-    if (config.contactEmail) {
-      emailEl.innerHTML = `✉️ <a href="mailto:${config.contactEmail}">${config.contactEmail}</a>`;
-    }
+    if (config.contactEmail) emailEl.innerHTML = `✉️ <a href="mailto:${config.contactEmail}">${config.contactEmail}</a>`;
   }
 
   // ── COUNTDOWN ──
@@ -785,48 +310,36 @@
     config.contactOrg = document.getElementById('contactOrg').value;
     config.contactPhones = document.getElementById('contactPhones').value;
     config.contactEmail = document.getElementById('contactEmail').value;
-    saveConfig();
-    renderDisplay();
+    saveConfig(); renderDisplay();
   }
 
   function renderDisplay() {
     document.getElementById('titleDisplay').textContent = config.name || '';
     document.getElementById('subtitleDisplay').textContent = config.subtitle || '';
     document.getElementById('locationDisplay').textContent = config.location || '';
-    renderImage();
-    renderContact();
-    startCountdown();
+    renderContact(); startCountdown();
   }
 
   function startCountdown() {
     if (interval) clearInterval(interval);
     if (!config.date) return;
-    tick();
-    interval = setInterval(tick, 1000);
+    tick(); interval = setInterval(tick, 1000);
   }
 
   function tick() {
     const target = new Date(config.date);
     const diff = target - new Date();
     const el = document.getElementById('countdown');
-
-    if (diff <= 0) {
-      el.innerHTML = '<div class="finished">¡El evento ha llegado!</div>';
-      clearInterval(interval);
-      return;
-    }
-
+    if (diff <= 0) { el.innerHTML = '<div class="finished">¡El evento ha llegado!</div>'; clearInterval(interval); return; }
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
-
     el.innerHTML = `
       <div class="time-block"><div class="time-value">${d}</div><div class="time-label">Días</div></div>
       <div class="time-block"><div class="time-value">${pad2(h)}</div><div class="time-label">Horas</div></div>
       <div class="time-block"><div class="time-value">${pad2(m)}</div><div class="time-label">Minutos</div></div>
-      <div class="time-block"><div class="time-value">${pad2(s)}</div><div class="time-label">Segundos</div></div>
-    `;
+      <div class="time-block"><div class="time-value">${pad2(s)}</div><div class="time-label">Segundos</div></div>`;
   }
 
   // ── EXIT MESSAGE ──
@@ -835,16 +348,14 @@
     if (e.clientY < 5 && !exitShown) {
       exitShown = true;
       document.getElementById('exitOverlay').classList.add('show');
-      setTimeout(() => {
-        document.getElementById('exitOverlay').classList.remove('show');
-        setTimeout(() => { exitShown = false; }, 5000);
-      }, 3000);
+      setTimeout(() => { document.getElementById('exitOverlay').classList.remove('show'); setTimeout(() => { exitShown = false; }, 5000); }, 3000);
     }
   });
 
   // ── INIT ──
   loadConfig();
   renderDisplay();
+  initImage();
 </script>
 </body>
 </html>
