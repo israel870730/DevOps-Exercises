@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosotros - Tour Challenger Tejo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh; background: #0a0a1a; font-family: 'Poppins', sans-serif;
+    color: #fff; display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar { width: 100%; padding: 16px 24px; display: flex; justify-content: center; gap: 8px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .nav-link { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; padding: 8px 20px; border-radius: 10px; opacity: 0.4; transition: all 0.3s; }
+  .nav-link:hover { opacity: 0.8; background: rgba(255,255,255,0.05); }
+  .nav-link.active { opacity: 1; background: rgba(100,200,255,0.1); }
+
+  /* ── PAGE HEADER ── */
+  .page-header { text-align: center; padding: 50px 20px 10px; }
+  .page-title {
+    font-size: clamp(28px, 5vw, 48px); font-weight: 800;
+    background: linear-gradient(135deg, #64c8ff, #c084fc, #f472b6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .page-subtitle { font-size: 14px; opacity: 0.35; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
+
+  /* ── CONTENT SECTIONS ── */
+  .content-area { max-width: 800px; width: 100%; padding: 30px 20px 40px; display: flex; flex-direction: column; gap: 30px; }
+
+  .section-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px; padding: clamp(24px, 4vw, 40px); transition: all 0.3s;
+  }
+  .section-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+
+  .section-icon { font-size: 36px; margin-bottom: 16px; }
+  .section-title {
+    font-size: clamp(18px, 3vw, 24px); font-weight: 800; margin-bottom: 16px;
+    background: linear-gradient(135deg, #64c8ff, #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .section-body { font-size: 15px; line-height: 1.8; opacity: 0.6; font-weight: 300; }
+  .section-body p { margin-bottom: 12px; }
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* Rules list */
+  .rules-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .rules-list li {
+    padding: 14px 18px; background: rgba(255,255,255,0.03); border-radius: 12px;
+    border-left: 3px solid rgba(100,200,255,0.3); font-size: 14px; line-height: 1.6; opacity: 0.6;
+  }
+  .rules-list li strong { opacity: 1; color: #fff; }
+
+  /* Scoring card */
+  .scoring-grid {
+    display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center;
+  }
+  .score-item {
+    flex: 1; min-width: 140px; text-align: center; padding: 20px;
+    background: rgba(255,255,255,0.04); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .score-value {
+    font-size: 32px; font-weight: 800;
+    background: linear-gradient(135deg, #64c8ff, #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .score-label { font-size: 12px; opacity: 0.4; text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
+
+  /* ── ADMIN ── */
+  .admin-trigger {
+    position: fixed; bottom: 16px; right: 16px; width: 40px; height: 40px;
+    border-radius: 50%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; opacity: 0.15; transition: opacity 0.3s; z-index: 100;
+  }
+  .admin-trigger:hover { opacity: 0.5; }
+
+  .login-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px); z-index: 200; align-items: center; justify-content: center;
+  }
+  .login-overlay.show { display: flex; }
+  .login-box {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 36px; width: min(380px, 90%);
+    display: flex; flex-direction: column; gap: 16px; text-align: center;
+  }
+  .login-box h3 { font-size: 16px; font-weight: 600; opacity: 0.8; }
+  .login-box .error-msg { color: #f87171; font-size: 13px; display: none; }
+  .login-box input[type="password"] {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px; padding: 12px 16px; color: #fff; font-family: 'Poppins', sans-serif;
+    font-size: 15px; outline: none; text-align: center; letter-spacing: 4px;
+  }
+  .btn-row { display: flex; gap: 10px; }
+  .btn-row button {
+    flex: 1; padding: 10px; border-radius: 12px; border: none; font-family: 'Poppins', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  }
+  .btn-enter { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+  .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
+
+  .admin-panel {
+    display: none; max-width: 800px; width: 100%; margin: 0 20px 30px; padding: 24px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; flex-direction: column; gap: 14px; animation: fadeIn 0.4s;
+  }
+  .admin-panel.visible { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .admin-panel h3 { font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+  .admin-panel label { font-size: 12px; opacity: 0.5; margin-bottom: -8px; }
+  .admin-panel input, .admin-panel textarea {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 10px 14px; color: #fff; font-family: 'Poppins', sans-serif;
+    font-size: 13px; outline: none;
+  }
+  .admin-panel textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; }
+  .btn-logout { background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: #f87171; padding: 6px 14px; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .btn-save {
+    padding: 10px 20px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+  .hint { font-size: 11px; opacity: 0.3; margin-top: -8px; line-height: 1.5; }
+
+  /* ── CONTACT FOOTER ── */
+  .contact-footer { width: 100%; margin-top: 40px; padding: 40px 20px; background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.06); display: none; flex-direction: column; align-items: center; gap: 16px; }
+  .contact-footer.show { display: flex; }
+  .contact-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 4px; opacity: 0.3; margin-bottom: 4px; }
+  .contact-org { font-size: clamp(14px, 2vw, 17px); font-weight: 600; text-align: center; opacity: 0.8; }
+  .contact-phones { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; }
+  .contact-phone { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 18px; font-size: 14px; text-decoration: none; color: #fff; opacity: 0.7; transition: all 0.3s; }
+  .contact-phone:hover { opacity: 1; background: rgba(100,200,255,0.1); border-color: rgba(100,200,255,0.3); }
+  .contact-phone .wa-icon { flex-shrink: 0; }
+  .contact-phone .phone-name { font-weight: 600; }
+  .contact-email { display: flex; align-items: center; gap: 8px; font-size: 14px; opacity: 0.5; margin-top: 4px; }
+  .contact-email a { color: #64c8ff; text-decoration: none; }
+
+  .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.15; pointer-events: none; z-index: -1; }
+  .bg-orb.a { width: 500px; height: 500px; background: #6366f1; top: -100px; left: -100px; animation: floatA 12s ease-in-out infinite; }
+  .bg-orb.b { width: 400px; height: 400px; background: #f472b6; bottom: -100px; right: -100px; animation: floatB 15s ease-in-out infinite; }
+  @keyframes floatA { 0%,100% { transform: translate(0,0); } 50% { transform: translate(80px,60px); } }
+  @keyframes floatB { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-60px,-80px); } }
+</style>
+</head>
+<body>
+<div class="bg-orb a"></div>
+<div class="bg-orb b"></div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-link">Inicio</a>
+  <a href="nosotros.html" class="nav-link active">Nosotros</a>
+  <a href="ranking.html" class="nav-link">Ranking</a>
+  <a href="galeria.html" class="nav-link">Galería</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-title" id="pageTitle">Tour Challenger Tejo</div>
+  <div class="page-subtitle">Conocé todo sobre el torneo</div>
+</div>
+
+<div class="content-area" id="contentArea">
+  <!-- Sección: Sobre nosotros -->
+  <div class="section-card" id="secAbout">
+    <div class="section-icon">🏆</div>
+    <div class="section-title" id="aboutTitle">¿Qué es el Tour Challenger Tejo?</div>
+    <div class="section-body" id="aboutBody">
+      <p>El Tour Challenger Tejo es un circuito de torneos de tejo que recorre diferentes localidades de Uruguay, reuniendo a los mejores jugadores y jugadoras del país en una competencia anual.</p>
+      <p>Nuestro objetivo es promover y difundir el deporte del tejo, fomentando la competencia sana, el compañerismo y la integración entre clubes y jugadores de todas las edades.</p>
+      <p>Organizado por Amigos del Tejo, el tour cuenta con múltiples fechas a lo largo del año en distintas sedes, acumulando puntos para un ranking anual que corona a los campeones de cada temporada.</p>
+    </div>
+  </div>
+
+  <!-- Sección: Reglas -->
+  <div class="section-card" id="secRules">
+    <div class="section-icon">📋</div>
+    <div class="section-title" id="rulesTitle">Reglas del Tejo</div>
+    <div class="section-body" id="rulesIntro">Las reglas principales del tejo en nuestros torneos son:</div>
+    <ul class="rules-list" id="rulesList">
+      <li><strong>Cancha:</strong> Se juega en una cancha rectangular de arena con un cilindro metálico (bocín) en el centro de cada cabecera.</li>
+      <li><strong>Objetivo:</strong> Lanzar los tejos (discos metálicos) lo más cerca posible del bocín, o derribarlo para sumar puntos extra.</li>
+      <li><strong>Equipos:</strong> Se puede jugar individual o en parejas, dependiendo de la modalidad del torneo.</li>
+      <li><strong>Puntuación:</strong> El tejo más cercano al bocín suma puntos. Derribar el bocín otorga puntos adicionales según el reglamento de cada torneo.</li>
+      <li><strong>Turnos:</strong> Los jugadores lanzan alternadamente. Cada jugador dispone de un número determinado de tejos por ronda.</li>
+      <li><strong>Ganador:</strong> Gana el jugador o equipo que alcance primero la puntuación establecida o que tenga más puntos al finalizar las rondas.</li>
+    </ul>
+  </div>
+
+  <!-- Sección: Sistema de puntos -->
+  <div class="section-card" id="secScoring">
+    <div class="section-icon">⭐</div>
+    <div class="section-title" id="scoringTitle">Sistema de Puntos del Tour</div>
+    <div class="section-body" id="scoringBody">
+      <p>En cada torneo del circuito, los jugadores acumulan puntos para el ranking anual. El sistema de puntuación es el siguiente:</p>
+    </div>
+    <div class="scoring-grid">
+      <div class="score-item">
+        <div class="score-value">2 pts</div>
+        <div class="score-label">Partido Ganado</div>
+      </div>
+      <div class="score-item">
+        <div class="score-value">1 pt</div>
+        <div class="score-label">Partido Perdido</div>
+      </div>
+    </div>
+    <div class="section-body" style="margin-top:16px;" id="scoringExtra">
+      <p>Los puntos se acumulan a lo largo de todos los torneos del año. Un jugador puede participar en uno o varios torneos. La tabla general del ranking refleja la suma total de puntos obtenidos en todas las fechas disputadas.</p>
+    </div>
+  </div>
+
+  <!-- Sección: Info del torneo -->
+  <div class="section-card" id="secInfo">
+    <div class="section-icon">📍</div>
+    <div class="section-title" id="infoTitle">Sedes y Fechas</div>
+    <div class="section-body" id="infoBody">
+      <p>El Tour Challenger Tejo 2025 recorre distintas localidades de Uruguay. Las sedes confirmadas hasta el momento son:</p>
+      <p>🏖️ <strong>Salinas</strong> — Primera fecha del circuito.</p>
+      <p>🏘️ <strong>Libertad</strong> — Segunda fecha del circuito.</p>
+      <p>📢 Nuevas sedes se anunciarán a lo largo del año. ¡Seguinos en las redes para enterarte!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Admin trigger -->
+<div class="admin-trigger" onclick="showLogin()" title="Admin">⚙</div>
+
+<!-- Login -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h3>Acceso Administrador</h3>
+    <input type="password" id="passInput" placeholder="••••••" onkeydown="if(event.key==='Enter') tryLogin()">
+    <div class="error-msg" id="errorMsg">Contraseña incorrecta</div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="hideLogin()">Cancelar</button>
+      <button class="btn-enter" onclick="tryLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <h3>Editar contenido</h3>
+    <button class="btn-logout" onclick="logoutAdmin()">Cerrar sesión</button>
+  </div>
+
+  <label>Sección: Sobre nosotros — Título</label>
+  <input type="text" id="editAboutTitle">
+  <label>Sección: Sobre nosotros — Texto</label>
+  <textarea id="editAboutBody" rows="5"></textarea>
+  <div class="hint">Usá líneas vacías para separar párrafos.</div>
+
+  <label>Sección: Reglas — Título</label>
+  <input type="text" id="editRulesTitle">
+  <label>Sección: Reglas — Intro</label>
+  <input type="text" id="editRulesIntro">
+  <label>Sección: Reglas — Lista (una regla por línea)</label>
+  <textarea id="editRulesList" rows="6"></textarea>
+  <div class="hint">Formato: Título: Descripción (una por línea). Ej: Cancha: Se juega en una cancha rectangular...</div>
+
+  <label>Sección: Sistema de Puntos — Título</label>
+  <input type="text" id="editScoringTitle">
+  <label>Sección: Sistema de Puntos — Texto superior</label>
+  <textarea id="editScoringBody" rows="3"></textarea>
+  <label>Sección: Sistema de Puntos — Texto inferior</label>
+  <textarea id="editScoringExtra" rows="3"></textarea>
+
+  <label>Sección: Sedes y Fechas — Título</label>
+  <input type="text" id="editInfoTitle">
+  <label>Sección: Sedes y Fechas — Texto</label>
+  <textarea id="editInfoBody" rows="5"></textarea>
+
+  <button class="btn-save" onclick="saveContent()">Guardar todos los cambios</button>
+</div>
+
+<!-- Contact footer -->
+<div class="contact-footer" id="contactFooter">
+  <div class="contact-title">Contacto & Organización</div>
+  <div class="contact-org" id="contactOrgDisplay"></div>
+  <div class="contact-phones" id="contactPhonesDisplay"></div>
+  <div class="contact-email" id="contactEmailDisplay"></div>
+</div>
+
+<script>
+  const CONTENT_KEY = 'nosotros_content';
+  let isAdmin = false;
+
+  // Default content extracted from HTML
+  const defaults = {
+    aboutTitle: '¿Qué es el Tour Challenger Tejo?',
+    aboutBody: 'El Tour Challenger Tejo es un circuito de torneos de tejo que recorre diferentes localidades de Uruguay, reuniendo a los mejores jugadores y jugadoras del país en una competencia anual.\n\nNuestro objetivo es promover y difundir el deporte del tejo, fomentando la competencia sana, el compañerismo y la integración entre clubes y jugadores de todas las edades.\n\nOrganizado por Amigos del Tejo, el tour cuenta con múltiples fechas a lo largo del año en distintas sedes, acumulando puntos para un ranking anual que corona a los campeones de cada temporada.',
+    rulesTitle: 'Reglas del Tejo',
+    rulesIntro: 'Las reglas principales del tejo en nuestros torneos son:',
+    rulesList: 'Cancha: Se juega en una cancha rectangular de arena con un cilindro metálico (bocín) en el centro de cada cabecera.\nObjetivo: Lanzar los tejos (discos metálicos) lo más cerca posible del bocín, o derribarlo para sumar puntos extra.\nEquipos: Se puede jugar individual o en parejas, dependiendo de la modalidad del torneo.\nPuntuación: El tejo más cercano al bocín suma puntos. Derribar el bocín otorga puntos adicionales según el reglamento de cada torneo.\nTurnos: Los jugadores lanzan alternadamente. Cada jugador dispone de un número determinado de tejos por ronda.\nGanador: Gana el jugador o equipo que alcance primero la puntuación establecida o que tenga más puntos al finalizar las rondas.',
+    scoringTitle: 'Sistema de Puntos del Tour',
+    scoringBody: 'En cada torneo del circuito, los jugadores acumulan puntos para el ranking anual. El sistema de puntuación es el siguiente:',
+    scoringExtra: 'Los puntos se acumulan a lo largo de todos los torneos del año. Un jugador puede participar en uno o varios torneos. La tabla general del ranking refleja la suma total de puntos obtenidos en todas las fechas disputadas.',
+    infoTitle: 'Sedes y Fechas',
+    infoBody: 'El Tour Challenger Tejo 2025 recorre distintas localidades de Uruguay. Las sedes confirmadas hasta el momento son:\n\n🏖️ Salinas — Primera fecha del circuito.\n\n🏘️ Libertad — Segunda fecha del circuito.\n\n📢 Nuevas sedes se anunciarán a lo largo del año. ¡Seguinos en las redes para enterarte!'
+  };
+
+  let content = { ...defaults };
+
+  function textToHtml(txt) {
+    return txt.split('\n\n').filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
+  }
+
+  function loadContent() {
+    try {
+      const saved = localStorage.getItem(CONTENT_KEY);
+      if (saved) content = { ...defaults, ...JSON.parse(saved) };
+    } catch(e) {}
+  }
+
+  function renderContent() {
+    document.getElementById('aboutTitle').textContent = content.aboutTitle;
+    document.getElementById('aboutBody').innerHTML = textToHtml(content.aboutBody);
+    document.getElementById('rulesTitle').textContent = content.rulesTitle;
+    document.getElementById('rulesIntro').textContent = content.rulesIntro;
+
+    const rulesList = document.getElementById('rulesList');
+    rulesList.innerHTML = '';
+    content.rulesList.split('\n').filter(l => l.trim()).forEach(line => {
+      const li = document.createElement('li');
+      const colonIdx = line.indexOf(':');
+      if (colonIdx > -1) {
+        li.innerHTML = `<strong>${line.slice(0, colonIdx)}:</strong>${line.slice(colonIdx + 1)}`;
+      } else {
+        li.textContent = line;
+      }
+      rulesList.appendChild(li);
+    });
+
+    document.getElementById('scoringTitle').textContent = content.scoringTitle;
+    document.getElementById('scoringBody').innerHTML = textToHtml(content.scoringBody);
+    document.getElementById('scoringExtra').innerHTML = textToHtml(content.scoringExtra);
+    document.getElementById('infoTitle').textContent = content.infoTitle;
+    document.getElementById('infoBody').innerHTML = textToHtml(content.infoBody);
+  }
+
+  function populateAdmin() {
+    document.getElementById('editAboutTitle').value = content.aboutTitle;
+    document.getElementById('editAboutBody').value = content.aboutBody;
+    document.getElementById('editRulesTitle').value = content.rulesTitle;
+    document.getElementById('editRulesIntro').value = content.rulesIntro;
+    document.getElementById('editRulesList').value = content.rulesList;
+    document.getElementById('editScoringTitle').value = content.scoringTitle;
+    document.getElementById('editScoringBody').value = content.scoringBody;
+    document.getElementById('editScoringExtra').value = content.scoringExtra;
+    document.getElementById('editInfoTitle').value = content.infoTitle;
+    document.getElementById('editInfoBody').value = content.infoBody;
+  }
+
+  function saveContent() {
+    content.aboutTitle = document.getElementById('editAboutTitle').value;
+    content.aboutBody = document.getElementById('editAboutBody').value;
+    content.rulesTitle = document.getElementById('editRulesTitle').value;
+    content.rulesIntro = document.getElementById('editRulesIntro').value;
+    content.rulesList = document.getElementById('editRulesList').value;
+    content.scoringTitle = document.getElementById('editScoringTitle').value;
+    content.scoringBody = document.getElementById('editScoringBody').value;
+    content.scoringExtra = document.getElementById('editScoringExtra').value;
+    content.infoTitle = document.getElementById('editInfoTitle').value;
+    content.infoBody = document.getElementById('editInfoBody').value;
+    try { localStorage.setItem(CONTENT_KEY, JSON.stringify(content)); } catch(e) {}
+    renderContent();
+    alert('Contenido guardado');
+  }
+
+  // ── LOGIN ──
+  function showLogin() {
+    if (isAdmin) return;
+    document.getElementById('loginOverlay').classList.add('show');
+    document.getElementById('passInput').value = '';
+    document.getElementById('errorMsg').style.display = 'none';
+    setTimeout(() => document.getElementById('passInput').focus(), 100);
+  }
+  function hideLogin() { document.getElementById('loginOverlay').classList.remove('show'); }
+
+  function tryLogin() {
+    let pass = 'admin123';
+    try { const c = JSON.parse(localStorage.getItem('countdown_config')); if (c && c.password) pass = c.password; } catch(e) {}
+    if (document.getElementById('passInput').value === pass) {
+      isAdmin = true; hideLogin();
+      document.getElementById('adminPanel').classList.add('visible');
+      populateAdmin();
+    } else {
+      document.getElementById('errorMsg').style.display = 'block';
+      document.getElementById('passInput').value = '';
+    }
+  }
+
+  function logoutAdmin() {
+    isAdmin = false;
+    document.getElementById('adminPanel').classList.remove('visible');
+  }
+
+  // ── CONTACT ──
+  function renderContact() {
+    let config = {
+      contactOrg: 'Amigos del Tejo', contactPhones: 'Sandra - 095221275\nJuan - 095503914\nChristian - 095194244\nJose - 099793727',
+      contactEmail: 'josebentancur1@hotmail.com'
+    };
+    try { const s = JSON.parse(localStorage.getItem('countdown_config')); if (s) config = { ...config, ...s }; } catch(e) {}
+    const footer = document.getElementById('contactFooter');
+    footer.classList.toggle('show', !!(config.contactOrg || config.contactPhones || config.contactEmail));
+    document.getElementById('contactOrgDisplay').textContent = config.contactOrg || '';
+    const phonesEl = document.getElementById('contactPhonesDisplay');
+    phonesEl.innerHTML = '';
+    if (config.contactPhones) {
+      config.contactPhones.split('\n').filter(l => l.trim()).forEach(line => {
+        const parts = line.split('-').map(s => s.trim());
+        const name = parts[0] || '', phone = parts[1] || '';
+        const clean = '598' + phone.replace(/\s/g,'').replace(/^0/,'');
+        const a = document.createElement('a');
+        a.className = 'contact-phone'; a.href = phone ? `https://wa.me/${clean}` : '#'; a.target = '_blank';
+        a.innerHTML = `<svg class="wa-icon" viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16.01 2.93C8.84 2.93 3.02 8.74 3.02 15.9c0 2.29.6 4.52 1.74 6.49L3 29.07l6.87-1.8a12.93 12.93 0 006.14 1.56h.01c7.16 0 12.98-5.81 12.98-12.97 0-3.47-1.35-6.72-3.8-9.17a12.9 12.9 0 00-9.19-3.76zm0 23.7a10.72 10.72 0 01-5.48-1.5l-.39-.23-4.08 1.07 1.09-3.97-.26-.41a10.7 10.7 0 01-1.64-5.69c0-5.94 4.84-10.77 10.78-10.77 2.88 0 5.58 1.12 7.61 3.15a10.7 10.7 0 013.15 7.63c0 5.94-4.84 10.77-10.78 10.77v-.05zm5.91-8.07c-.32-.16-1.91-.94-2.21-1.05-.29-.11-.51-.16-.72.16-.21.32-.82 1.05-1.01 1.26-.18.21-.37.24-.69.08-.32-.16-1.36-.5-2.58-1.6-.96-.85-1.6-1.9-1.79-2.22-.18-.32-.02-.5.14-.66.15-.14.32-.37.49-.56.16-.18.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.74-.99-2.38-.26-.63-.53-.54-.72-.55h-.62c-.21 0-.56.08-.85.4-.29.32-1.12 1.1-1.12 2.67 0 1.58 1.15 3.1 1.31 3.31.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.83.67.77.24 1.47.21 2.02.13.62-.09 1.91-.78 2.18-1.54.27-.75.27-1.4.19-1.54-.08-.13-.29-.21-.62-.37z"/></svg><span class="phone-name">${name}</span>${phone ? ' — ' + phone : ''}`;
+        phonesEl.appendChild(a);
+      });
+    }
+    const emailEl = document.getElementById('contactEmailDisplay');
+    emailEl.innerHTML = '';
+    if (config.contactEmail) emailEl.innerHTML = `✉️ <a href="mailto:${config.contactEmail}">${config.contactEmail}</a>`;
+  }
+
+  // ── INIT ──
+  loadContent();
+  renderContent();
+  renderContact();
+</script>
+</body>
+</html>
